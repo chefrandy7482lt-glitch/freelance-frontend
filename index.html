@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Freelance Assistant Dashboard</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background:#050816; color:#e5e7eb; margin:0; }
+    .page { min-height:100vh; display:flex; flex-direction:column; }
+    header { padding:16px 24px; border-bottom:1px solid #1f2937; display:flex; justify-content:space-between; align-items:center; background:#0a0f1f; }
+    h1 { margin:0; font-size:18px; letter-spacing:0.08em; color:#9ca3af; text-transform:uppercase; }
+    .status-pill { padding:4px 10px; border-radius:999px; font-size:12px; border:1px solid #16a34a55; color:#bbf7d0; background:#022c22; display:flex; align-items:center; gap:6px; }
+    main { flex:1; display:grid; grid-template-columns:2fr 1.2fr; gap:16px; padding:16px 24px; }
+    .card { background:#111827; border-radius:16px; border:1px solid #1f2937; padding:16px; }
+    textarea { width:100%; min-height:60px; background:#020617; border:1px solid #1f2937; border-radius:10px; color:#e5e7eb; padding:8px; }
+    button { border-radius:999px; border:1px solid #22c55e; background:#16a34a; color:#022c22; padding:7px 14px; cursor:pointer; }
+    .secondary { background:#020617; border-color:#374151; color:#9ca3af; }
+    .response-box { margin-top:8px; padding:10px; border-radius:10px; border:1px solid #1f2937; background:#020617; min-height:60px; white-space:pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>TDU · FREELANCE PIPELINE</h1>
+      <div class="status-pill">System stable</div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Freelance assistant</h2>
+        <textarea id="userInput" placeholder="Describe the task..."></textarea>
+        <div style="margin-top:8px; display:flex; gap:8px;">
+          <button onclick="sendRequest()">Send</button>
+          <button class="secondary" onclick="clearRequest()">Clear</button>
+        </div>
+        <div class="response-box" id="responseBox">Waiting for first request.</div>
+      </section>
+
+      <section class="card">
+        <h2>System snapshot</h2>
+        <p>Backend: freelance-assistant-2</p>
+        <p>Pipeline: Source → Backend → Dashboard → User</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const BACKEND_URL = "https://freelance-assistant-2.onrender.com/generate";
+
+    async function sendRequest() {
+      const input = document.getElementById("userInput").value.trim();
+      const box = document.getElementById("responseBox");
+      if (!input) { box.textContent = "Please enter a request."; return; }
+
+      box.textContent = "Sending request...";
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input })
+        });
+
+        if (!res.ok) {
+          box.textContent = "Backend error: " + res.status;
+          return;
+        }
+
+        const data = await res.json();
+        box.textContent = data.reply || data.response || JSON.stringify(data, null, 2);
+
+      } catch (err) {
+        box.textContent = "Network error: " + err.message;
+      }
+    }
+
+    function clearRequest() {
+      document.getElementById("userInput").value = "";
+      document.getElementById("responseBox").textContent = "Waiting for first request.";
+    }
+  </script>
+</body>
+</html>
