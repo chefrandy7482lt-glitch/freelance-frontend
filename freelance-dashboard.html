@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TDU Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #05060a;
+      --bg-alt: #0b0d14;
+      --panel: #11141f;
+      --panel-alt: #171b28;
+      --accent: #4fd1c5;
+      --accent-soft: rgba(79, 209, 197, 0.12);
+      --accent-strong: rgba(79, 209, 197, 0.25);
+      --border: #252a3a;
+      --text: #f7fafc;
+      --text-soft: #a0aec0;
+      --danger: #f56565;
+      --success: #48bb78;
+      --warning: #ecc94b;
+      --muted: #2d3748;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --shadow-subtle: 0 10px 30px rgba(0, 0, 0, 0.35);
+      --transition-fast: 0.16s ease-out;
+      --transition-med: 0.22s ease-out;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --grid-gap: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: radial-gradient(circle at top, #111827 0, #020309 55%, #000 100%);
+      color: var(--text);
+      font-family: var(--font-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 18px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1240px;
+      background: linear-gradient(145deg, #05060a 0%, #05060a 40%, #050814 100%);
+      border-radius: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(79, 209, 197, 0.12), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(129, 140, 248, 0.12), transparent 55%);
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .app-header {
+      padding: 16px 22px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.92),
+        rgba(15, 23, 42, 0.82)
+      );
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 20% 0%, #4fd1c5, transparent 55%),
+        radial-gradient(circle at 80% 100%, #6366f1, transparent 55%);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9), var(--shadow-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: inherit;
+      border: 1px solid rgba(15, 23, 42, 0.7);
+      opacity: 0.9;
+    }
+
+    .brand-mark span {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e6fffa;
+      text-shadow: 0 0 12px rgba(15, 23, 42, 0.9);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e2e8f0;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at 0 0, rgba(79, 209, 197, 0.2), transparent 60%);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #e2e8f0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.25);
+    }
+
+    .user-tag {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 11px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .user-tag span {
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .app-main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: var(--grid-gap);
+      padding: 16px 18px 18px;
+      min-height: 420px;
+    }
+
+    @media (max-width: 900px) {
+      .app-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at 0 0, #111827, #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: var(--shadow-subtle);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .panel-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .panel-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .panel-badge {
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: 11px;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .panel-badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .panel-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, #111827, #020617);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 10px 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(79, 209, 197, 0.12), transparent 55%);
+      opacity: 0;
+      transition: opacity var(--transition-med);
+      pointer-events: none;
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .card-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .status-pill {
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .status-dot.ok {
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.25);
+    }
+
+    .status-dot.warn {
+      background: var(--warning);
+      box-shadow: 0 0 0 3px rgba(236, 201, 75, 0.25);
+    }
+
+    .status-dot.err {
+      background: var(--danger);
+      box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.25);
+    }
+
+    .metric-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .metric-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .metric-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .chip {
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      font-size: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .chip-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a5b4fc;
+    }
+
+    .log-panel {
+      background: radial-gradient(circle at 0 0, #020617, #020309);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 170px;
+      overflow: hidden;
+    }
+
+    .log-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .log-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .log-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .log-filter button {
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+
+    .log-filter button.active {
+      background: rgba(79, 209, 197, 0.16);
+      color: #e2e8f0;
+    }
+
+    .log-list {
+      margin-top: 4px;
+      padding-right: 2px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+    }
+
+    .log-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .log-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .log-list::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .log-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(55, 65, 81, 0.7);
+    }
+
+    .log-item:last-child {
+      border-bottom: none;
+    }
+
+    .log-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      flex-shrink: 0;
+    }
+
+    .log-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .log-main {
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .log-meta {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.96);
+      color: #e2e8f0;
+      font-size: 11px;
+      padding: 5px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition:
+        background var(--transition-med),
+        border-color var(--transition-med),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .btn-primary {
+      background: radial-gradient(circle at 0 0, #4fd1c5, #0f172a);
+      border-color: rgba(79, 209, 197, 0.9);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9), 0 12px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .btn-primary:hover {
+      background: radial-gradient(circle at 0 0, #5eead4, #020617);
+    }
+
+    .btn-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-style: dashed;
+      color: var(--text-soft);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .hint-text {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .hint-strong {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .right-panel-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .assistant-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .assistant-item {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: radial-gradient(circle at 0 0, #020617, #020309);
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      transition:
+        border-color var(--transition-med),
+        box-shadow var(--transition-med),
+        transform var(--transition-fast),
+        background var(--transition-med);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .assistant-item::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 0 0, rgba(79, 209, 197, 0.16), transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition-med);
+      pointer-events: none;
+    }
+
+    .assistant-item:hover::before {
+      opacity: 1;
+    }
+
+    .assistant-item.active {
+      border-color: rgba(79, 209, 197, 0.9);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9), 0 12px 30px rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at 0 0, #0f172a, #020617);
+    }
+
+    .assistant-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .assistant-name-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .assistant-name {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .assistant-role {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .assistant-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .assistant-tag {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #a5b4fc;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .assistant-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: var(--text-soft);
+      background: rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .assistant-pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .session-panel {
+      background: radial-gradient(circle at 0 0, #020617, #020309);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .session-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .session-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .session-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .session-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .session-label {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .session-value {
+      font-size: 11px;
+      color: #e5e7eb;
+    }
+
+    .session-input-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .session-input-row input {
+      flex: 1;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.96);
+      color: #e2e8f0;
+      font-size: 11px;
+      padding: 6px 9px;
+      outline: none;
+      transition:
+        border-color var(--transition-med),
+        box-shadow var(--transition-med),
+        background var(--transition-med);
+    }
+
+    .session-input-row input::placeholder {
+      color: #64748b;
+    }
+
+    .session-input-row input:focus {
+      border-color: rgba(79, 209, 197, 0.9);
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9), 0 0 0 1px rgba(79, 209, 197, 0.9);
+      background: rgba(15, 23, 42, 0.98);
+    }
+
+    .session-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .session-note {
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .session-note strong {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .footer-bar {
+      padding: 8px 18px 10px;
+      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: radial-gradient(circle at 0 0, rgba(15, 23, 42, 0.96), #020309);
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.25);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .footer-tag {
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      font-size: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-tag strong {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">
+          <span>TDU</span>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">Flow Dashboard</div>
+          <div class="brand-subtitle">Build → Deploy → Operate</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>System Stable</span>
+        </div>
+        <div class="user-tag">
+          Operator:
+          <span>R</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- LEFT: SYSTEM + LOGS -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <div class="panel-title">System overview</div>
+            <div class="panel-subtitle">TDU · Freelance pipeline · Live geometry</div>
+          </div>
+          <div class="panel-badge">
+            <span class="panel-badge-dot"></span>
+            <span>Build · Deploy · Operate</span>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <div class="grid-2">
+            <!-- Core engine -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <div class="card-title">TDU core</div>
+                  <div class="card-subtitle">Flow engine · 270° layer</div>
+                </div>
+                <div class="status-pill">
+                  <span class="status-dot ok"></span>
+                  <span>Aligned</span>
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">Flow state</div>
+                <div class="metric-value" id="coreFlowState">Stable</div>
+              </div>
+              <div class="metric-chip-row">
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  <span>Autonomy: <strong>High</strong></span>
+                </div>
+                <div class="chip">
+                  <span class="chip-tag">Compensation bound</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Frontend -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <div class="card-title">Frontend surface</div>
+                  <div class="card-subtitle">Freelance dashboard · 90° layer</div>
+                </div>
+                <div class="status-pill">
+                  <span class="status-dot warn"></span>
+                  <span id="frontendStatusLabel">Pending upload</span>
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">GitHub status</div>
+                <div class="metric-value" id="githubStatus">Ready to push</div>
+              </div>
+              <div class="metric-chip-row">
+                <div class="chip">
+                  <span class="chip-tag">Shape: Dashboard</span>
+                </div>
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  <span>Demo: <strong>Weekend</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- Render / deployment -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <div class="card-title">Deployment</div>
+                  <div class="card-subtitle">Render · Static site</div>
+                </div>
+                <div class="status-pill">
+                  <span class="status-dot ok" id="deployStatusDot"></span>
+                  <span id="deployStatusLabel">Ready</span>
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">Target</div>
+                <div class="metric-value">freelance-frontend</div>
+              </div>
+              <div class="metric-chip-row">
+                <div class="chip">
+                  <span class="chip-tag">Step 1</span>
+                  <span>Upload files → GitHub</span>
+                </div>
+                <div class="chip">
+                  <span class="chip-tag">Step 2</span>
+                  <span>Connect → Render static</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Protection / compensation -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <div class="card-title">Compensation logic</div>
+                  <div class="card-subtitle">Union-style safeguards</div>
+                </div>
+                <div class="status-pill">
+                  <span class="status-dot ok"></span>
+                  <span>Embedded</span>
+                </div>
+              </div>
+              <div class="metric-row">
+                <div class="metric-label">Continuity</div>
+                <div class="metric-value">With or without operator</div>
+              </div>
+              <div class="metric-chip-row">
+                <div class="chip">
+                  <span class="chip-tag">Human-first</span>
+                </div>
+                <div class="chip">
+                  <span class="chip-dot"></span>
+                  <span>Value: <strong>Retained</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Logs -->
+          <div class="log-panel">
+            <div class="log-header-row">
+              <div class="log-title">Recent flow events</div>
+              <div class="log-filter">
+                <span>Filter:</span>
+                <button data-filter="all" class="active">All</button>
+                <button data-filter="system">System</button>
+                <button data-filter="frontend">Frontend</button>
+                <button data-filter="deploy">Deploy</button>
+              </div>
+            </div>
+            <div class="log-list" id="logList">
+              <!-- Logs injected by JS -->
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="controls-row">
+            <div class="control-group">
+              <button class="btn btn-primary" id="btnMarkFrontendReady">
+                <span class="btn-icon">▲</span>
+                <span>Mark frontend as uploaded</span>
+              </button>
+              <button class="btn" id="btnSimulateDeploy">
+                <span class="btn-icon">▶</span>
+                <span>Simulate deploy</span>
+              </button>
+            </div>
+            <div class="hint-text">
+              <span class="hint-strong">Flow hint:</span>
+              Upload → Connect to Render → Show dashboard this weekend.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: ASSISTANTS + SESSION -->
+      <section class="right-panel-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title-group">
+              <div class="panel-title">Assistants</div>
+              <div class="panel-subtitle">90° surfaces for 270° system</div>
+            </div>
+            <div class="panel-badge">
+              <span>Demo-ready layout</span>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="assistant-list" id="assistantList">
+              <div class="assistant-item active" data-assistant="freelance">
+                <div class="assistant-header">
+                  <div class="assistant-name-group">
+                    <div class="assistant-name">Freelance interface</div>
+                    <div class="assistant-role">Client-facing · Single entry point</div>
+                  </div>
+                  <div class="assistant-pill">
+                    <span class="assistant-pill-dot"></span>
+                    <span>Primary</span>
+                  </div>
+                </div>
+                <div class="assistant-meta">
+                  <span class="assistant-tag">Shape: Dashboard</span>
+                  <span class="assistant-tag">Mode: Demo</span>
+                </div>
+              </div>
+
+              <div class="assistant-item" data-assistant="tdu-core">
+                <div class="assistant-header">
+                  <div class="assistant-name-group">
+                    <div class="assistant-name">TDU core view</div>
+                    <div class="assistant-role">Internal · Flow diagnostics</div>
+                  </div>
+                  <div class="assistant-pill">
+                    <span class="assistant-pill-dot"></span>
+                    <span>Internal</span>
+                  </div>
+                </div>
+                <div class="assistant-meta">
+                  <span class="assistant-tag">270°</span>
+                  <span class="assistant-tag">Not for demo</span>
+                </div>
+              </div>
+
+              <div class="assistant-item" data-assistant="observer">
+                <div class="assistant-header">
+                  <div class="assistant-name-group">
+                    <div class="assistant-name">Observer lane</div>
+                    <div class="assistant-role">Read-only · Stability check</div>
+                  </div>
+                  <div class="assistant-pill">
+                    <span class="assistant-pill-dot"></span>
+                    <span>Safe</span>
+                  </div>
+                </div>
+                <div class="assistant-meta">
+                  <span class="assistant-tag">No write</span>
+                  <span class="assistant-tag">Demo-friendly</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="session-panel">
+          <div class="session-header">
+            <div class="session-title">Session context</div>
+            <div class="status-pill">
+              <span class="status-dot ok"></span>
+              <span>Weekend demo</span>
+            </div>
+          </div>
+          <div class="session-body">
+            <div class="session-row">
+              <div class="session-label">Audience</div>
+              <div class="session-value">Efficiency / systems mind</div>
+            </div>
+            <div class="session-row">
+              <div class="session-label">Surface to show</div>
+              <div class="session-value" id="sessionSurface">Freelance dashboard</div>
+            </div>
+            <div class="session-row">
+              <div class="session-label">Depth exposed</div>
+              <div class="session-value" id="sessionDepth">90° only</div>
+            </div>
+
+            <div class="session-input-row">
+              <input
+                id="demoNoteInput"
+                type="text"
+                placeholder="Optional: note for this demo (e.g. 'Show flow, not internals')"
+              />
+              <button class="btn btn-ghost" id="btnSaveNote">
+                <span class="btn-icon">✓</span>
+                <span>Pin</span>
+              </button>
+            </div>
+
+            <div class="session-footer">
+              <div class="session-note" id="demoNoteDisplay">
+                <strong>Pinned note:</strong> Keep it simple. Show structure, not secrets.
+              </div>
+              <button class="btn" id="btnResetSession">
+                <span class="btn-icon">↺</span>
+                <span>Reset view</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-bar">
+      <div class="footer-left">
+        <span class="footer-dot"></span>
+        <span>Geometry: triangle · Source → Deploy → Connection</span>
+      </div>
+      <div class="footer-right">
+        <div class="footer-tag">
+          <span>Phase:</span>
+          <strong>Build → Upload → Demo</strong>
+        </div>
+        <div class="footer-tag">
+          <span>Rule:</span>
+          <strong>Prepare for worst, design for stability</strong>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const logs = [
+      {
+        type: "system",
+        tag: "System",
+        text: "TDU core alignment confirmed. Flow stable, autonomy high, compensation logic embedded.",
+        meta: "Just now · 270° layer"
+      },
+      {
+        type: "frontend",
+        tag: "Frontend",
+        text: "Dashboard shape selected as primary surface for freelance interface.",
+        meta: "Just now · 90° layer"
+      },
+      {
+        type: "deploy",
+        tag: "Deploy",
+        text: "Render static site target ready. Awaiting GitHub upload of freelance-frontend.",
+        meta: "Just now · Render"
+      },
+      {
+        type: "system",
+        tag: "Context",
+        text: "Weekend demo flagged. Audience: efficiency / systems mindset.",
+        meta: "Today · Session context"
+      },
+      {
+        type: "frontend",
+        tag: "UX",
+        text: "Interface constrained to 90° view. Internal 270° logic remains hidden.",
+        meta: "Today · Safety"
+      }
+    ];
+
+    const logListEl = document.getElementById("logList");
+    const filterButtons = document.querySelectorAll(".log-filter button");
+
+    function renderLogs(filter = "all") {
+      logListEl.innerHTML = "";
+      logs
+        .filter((log) => filter === "all" || log.type === filter)
+        .forEach((log) => {
+          const item = document.createElement("div");
+          item.className = "log-item";
+          item.innerHTML = `
+            <div class="log-tag">${log.tag}</div>
+            <div class="log-text-group">
+              <div class="log-main">${log.text}</div>
+              <div class="log-meta">${log.meta}</div>
+            </div>
+          `;
+          logListEl.appendChild(item);
+        });
+    }
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderLogs(btn.dataset.filter);
+      });
+    });
+
+    renderLogs("all");
+
+    const btnMarkFrontendReady = document.getElementById("btnMarkFrontendReady");
+    const btnSimulateDeploy = document.getElementById("btnSimulateDeploy");
+    const frontendStatusLabel = document.getElementById("frontendStatusLabel");
+    const githubStatus = document.getElementById("githubStatus");
+    const deployStatusDot = document.getElementById("deployStatusDot");
+    const deployStatusLabel = document.getElementById("deployStatusLabel");
+
+    btnMarkFrontendReady.addEventListener("click", () => {
+      frontendStatusLabel.textContent = "Uploaded";
+      githubStatus.textContent = "Committed · Ready for Render";
+      logs.unshift({
+        type: "frontend",
+        tag: "Frontend",
+        text: "Frontend marked as uploaded. Next step: connect repository to Render static site.",
+        meta: "Just now · GitHub"
+      });
+      renderLogs(
+        document.querySelector(".log-filter button.active").dataset.filter
+      );
+    });
+
+    btnSimulateDeploy.addEventListener("click", () => {
+      deployStatusDot.classList.remove("warn", "err");
+      deployStatusDot.classList.add("ok");
+      deployStatusLabel.textContent = "Deployed (simulated)";
+      logs.unshift({
+        type: "deploy",
+        tag: "Deploy",
+        text: "Simulated deployment completed. Dashboard considered live for demo purposes.",
+        meta: "Just now · Render (simulated)"
+      });
+      renderLogs(
+        document.querySelector(".log-filter button.active").dataset.filter
+      );
+    });
+
+    const assistantItems = document.querySelectorAll(".assistant-item");
+    const sessionSurface = document.getElementById("sessionSurface");
+    const sessionDepth = document.getElementById("sessionDepth");
+
+    assistantItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        assistantItems.forEach((i) => i.classList.remove("active"));
+        item.classList.add("active");
+        const id = item.dataset.assistant;
+        if (id === "freelance") {
+          sessionSurface.textContent = "Freelance dashboard";
+          sessionDepth.textContent = "90° only";
+        } else if (id === "tdu-core") {
+          sessionSurface.textContent = "Internal diagnostics (not for demo)";
+          sessionDepth.textContent = "270° (hidden in demo)";
+        } else if (id === "observer") {
+          sessionSurface.textContent = "Observer lane · Read-only";
+          sessionDepth.textContent = "90° safe view";
+        }
+      });
+    });
+
+    const demoNoteInput = document.getElementById("demoNoteInput");
+    const demoNoteDisplay = document.getElementById("demoNoteDisplay");
+    const btnSaveNote = document.getElementById("btnSaveNote");
+    const btnResetSession = document.getElementById("btnResetSession");
+
+    btnSaveNote.addEventListener("click", () => {
+      const value = demoNoteInput.value.trim();
+      if (!value) return;
+      demoNoteDisplay.innerHTML = `<strong>Pinned note:</strong> ${value}`;
+      logs.unshift({
+        type: "system",
+        tag: "Note",
+        text: `Pinned demo note: "${value}"`,
+        meta: "Just now · Session"
+      });
+      renderLogs(
+        document.querySelector(".log-filter button.active").dataset.filter
+      );
+      demoNoteInput.value = "";
+    });
+
+    btnResetSession.addEventListener("click", () => {
+      sessionSurface.textContent = "Freelance dashboard";
+      sessionDepth.textContent = "90° only";
+      demoNoteDisplay.innerHTML =
+        "<strong>Pinned note:</strong> Keep it simple. Show structure, not secrets.";
+      logs.unshift({
+        type: "system",
+        tag: "Session",
+        text: "Session view reset to default: freelance dashboard · 90° only.",
+        meta: "Just now · Session"
+      });
+      renderLogs(
+        document.querySelector(".log-filter button.active").dataset.filter
+      );
+    });
+  </script>
+</body>
+</html>
