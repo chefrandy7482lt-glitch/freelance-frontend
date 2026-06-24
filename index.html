@@ -1,195 +1,137 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Freelance Assistant Dashboard</title>
-    <style>
-        body {
-            background: #050608;
-            color: #e8ecf3;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            padding: 20px 32px;
-            border-bottom: 1px solid #222733;
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #9fd3ff;
-        }
-        header span {
-            font-size: 13px;
-            color: #7b8496;
-        }
-        main {
-            padding: 24px 32px 40px;
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-        .card {
-            background: #0b0e14;
-            border: 1px solid #1c2230;
-            border-radius: 10px;
-            padding: 18px 20px;
-        }
-        .card h2 {
-            margin: 0 0 10px;
-            font-size: 16px;
-            color: #cfd6e5;
-        }
-        .card p {
-            margin: 4px 0;
-            font-size: 13px;
-            color: #8b93a5;
-        }
-        .pill {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            border: 1px solid #283246;
-            color: #9fd3ff;
-            background: #0b111c;
-            margin-top: 6px;
-        }
-        .input-row {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-        }
-        textarea {
-            flex: 1;
-            min-height: 80px;
-            resize: vertical;
-            background: #05070c;
-            border-radius: 8px;
-            border: 1px solid #252c3b;
-            padding: 10px 12px;
-            color: #e8ecf3;
-            font-size: 13px;
-        }
-        textarea::placeholder {
-            color: #5f6676;
-        }
-        button {
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .primary {
-            background: #2f7df4;
-            color: #ffffff;
-        }
-        .secondary {
-            background: #151922;
-            color: #cfd6e5;
-            border: 1px solid #252c3b;
-        }
-        .status-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            font-size: 12px;
-            color: #8b93a5;
-        }
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #3dd68c;
-            margin-right: 6px;
-        }
-        .status-label {
-            display: flex;
-            align-items: center;
-        }
-        .pipeline {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #9fd3ff;
-        }
-        .pipeline span {
-            color: #cfd6e5;
-        }
-        .snapshot-list p {
-            margin: 2px 0;
-        }
-        .footer-note {
-            margin-top: 14px;
-            font-size: 11px;
-            color: #5f6676;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TDU · Guided System</title>
+
+<style>
+    body {
+        background: #050608;
+        color: #e8ecf3;
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 40px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 28px;
+        letter-spacing: 0.08em;
+        color: #9fd3ff;
+        margin-bottom: 30px;
+    }
+
+    .level {
+        margin: 20px auto;
+        padding: 20px;
+        width: 90%;
+        max-width: 500px;
+        background: #0b0e14;
+        border: 1px solid #1c2230;
+        border-radius: 10px;
+        display: none;
+    }
+
+    .level.active {
+        display: block;
+    }
+
+    button {
+        padding: 12px 20px;
+        margin-top: 15px;
+        background: #2f7df4;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    button.secondary {
+        background: #151922;
+        border: 1px solid #252c3b;
+        color: #cfd6e5;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 80px;
+        background: #05070c;
+        border: 1px solid #252c3b;
+        border-radius: 8px;
+        padding: 10px;
+        color: #e8ecf3;
+        margin-top: 10px;
+    }
+
+    .output {
+        margin-top: 30px;
+        padding: 20px;
+        background: #0b0e14;
+        border: 1px solid #1c2230;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+
 </head>
 <body>
 
-<header>
-    <div>
-        <h1>TDU · FREELANCE PIPELINE</h1>
-        <span>System stable · Dashboard wired to freelance-assistant-2</span>
-    </div>
-    <span>Live: production dashboard</span>
-</header>
+<h1>TDU · GUIDED SYSTEM</h1>
 
-<main>
-    <section class="card">
-        <h2>Freelance assistant</h2>
-        <p>Describe the task you want the system to perform.</p>
+<!-- LEVEL 1 -->
+<div id="level1" class="level active">
+    <h2>Level 1 · Activation</h2>
+    <p>Begin the geometric sequence.</p>
+    <button onclick="openLevel(2)">Activate Level 1</button>
+</div>
 
-        <div class="input-row">
-            <textarea placeholder="Example: Draft a proposal for a web app, summarize a client brief, generate a task breakdown..."></textarea>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-                <button class="primary">Send</button>
-                <button class="secondary">Clear</button>
-            </div>
-        </div>
+<!-- LEVEL 2 -->
+<div id="level2" class="level">
+    <h2>Level 2 · Descent</h2>
+    <p>The system descends into execution posture.</p>
+    <button onclick="openLevel(3)">Proceed to Level 2</button>
+</div>
 
-        <div class="status-row">
-            <div class="status-label">
-                <div class="status-dot"></div>
-                <span>Waiting for first request.</span>
-            </div>
-            <span>Backend: freelance-assistant-2</span>
-        </div>
+<!-- LEVEL 3 -->
+<div id="level3" class="level">
+    <h2>Level 3 · Execution</h2>
+    <p>Describe the task for backend execution.</p>
+    <textarea id="taskInput" placeholder="Describe the task..."></textarea>
+    <button onclick="revealOutput()">Execute</button>
+</div>
 
-        <div class="pipeline">
-            <span>Pipeline:</span> Source → Backend → Dashboard → User
-        </div>
+<!-- OUTPUT -->
+<div id="output" class="output">
+    <h2>Return · Reveal</h2>
+    <p id="outputText">The system has executed the task.</p>
+    <button class="secondary" onclick="resetSystem()">Reset</button>
+</div>
 
-        <div class="footer-note">
-            This dashboard is the live production surface. When you send a task, the pipeline engages and returns the result here.
-        </div>
-    </section>
+<script>
+function openLevel(n) {
+    document.querySelectorAll('.level').forEach(l => l.classList.remove('active'));
+    document.getElementById('level' + n).classList.add('active');
+}
 
-    <section class="card">
-        <h2>System snapshot</h2>
-        <div class="snapshot-list">
-            <p>• Backend: <strong>freelance-assistant-2</strong></p>
-            <p>• Mode: <strong>Production</strong></p>
-            <p>• Line: <strong>Ready</strong></p>
-            <p>• Mirror: <strong>Intact</strong></p>
-        </div>
+function revealOutput() {
+    const task = document.getElementById('taskInput').value.trim();
+    const out = document.getElementById('output');
 
-        <span class="pill">TDU · Geometric runtime</span>
+    document.querySelectorAll('.level').forEach(l => l.classList.remove('active'));
 
-        <p class="footer-note">
-            This snapshot reflects the current execution posture of the freelance pipeline.  
-            Frontend is static; backend handles all task execution.
-        </p>
-    </section>
-</main>
+    document.getElementById('outputText').innerText =
+        task ? "Task received: " + task : "Task executed.";
+
+    out.style.display = 'block';
+}
+
+function resetSystem() {
+    document.getElementById('output').style.display = 'none';
+    openLevel(1);
+}
+</script>
 
 </body>
 </html>
