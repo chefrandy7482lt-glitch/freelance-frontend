@@ -3,59 +3,193 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TDU · Freelance Pipeline</title>
+    <title>Freelance Assistant Dashboard</title>
     <style>
         body {
-            background: #111;
-            color: #eee;
-            font-family: Arial, sans-serif;
+            background: #050608;
+            color: #e8ecf3;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             margin: 0;
-            padding: 40px;
-            text-align: center;
+            padding: 0;
         }
-        h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+        header {
+            padding: 20px 32px;
+            border-bottom: 1px solid #222733;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
         }
-        h2 {
-            font-size: 20px;
-            margin-top: 0;
-            color: #6cf;
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #9fd3ff;
         }
-        .box {
-            border: 1px solid #444;
-            padding: 20px;
-            margin: 20px auto;
-            width: 90%;
-            max-width: 600px;
-            background: #1a1a1a;
+        header span {
+            font-size: 13px;
+            color: #7b8496;
+        }
+        main {
+            padding: 24px 32px 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        .card {
+            background: #0b0e14;
+            border: 1px solid #1c2230;
+            border-radius: 10px;
+            padding: 18px 20px;
+        }
+        .card h2 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: #cfd6e5;
+        }
+        .card p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #8b93a5;
+        }
+        .pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            border: 1px solid #283246;
+            color: #9fd3ff;
+            background: #0b111c;
+            margin-top: 6px;
+        }
+        .input-row {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        textarea {
+            flex: 1;
+            min-height: 80px;
+            resize: vertical;
+            background: #05070c;
             border-radius: 8px;
+            border: 1px solid #252c3b;
+            padding: 10px 12px;
+            color: #e8ecf3;
+            font-size: 13px;
         }
-        .version {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #f55;
+        textarea::placeholder {
+            color: #5f6676;
+        }
+        button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .primary {
+            background: #2f7df4;
+            color: #ffffff;
+        }
+        .secondary {
+            background: #151922;
+            color: #cfd6e5;
+            border: 1px solid #252c3b;
+        }
+        .status-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #8b93a5;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3dd68c;
+            margin-right: 6px;
+        }
+        .status-label {
+            display: flex;
+            align-items: center;
+        }
+        .pipeline {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #9fd3ff;
+        }
+        .pipeline span {
+            color: #cfd6e5;
+        }
+        .snapshot-list p {
+            margin: 2px 0;
+        }
+        .footer-note {
+            margin-top: 14px;
+            font-size: 11px;
+            color: #5f6676;
         }
     </style>
 </head>
 <body>
 
-    <h1>TDU · FREELANCE PIPELINE</h1>
-    <h2>System stable</h2>
-
-    <div class="box">
-        <p><strong>Freelance assistant</strong></p>
-        <p>Describe the task...</p>
-        <p><em>Waiting for first request.</em></p>
+<header>
+    <div>
+        <h1>TDU · FREELANCE PIPELINE</h1>
+        <span>System stable · Dashboard wired to freelance-assistant-2</span>
     </div>
+    <span>Live: production dashboard</span>
+</header>
 
-    <div class="box">
-        <p><strong>Backend:</strong> freelance-assistant-2</p>
-        <p><strong>Pipeline:</strong> Source → Backend → Dashboard → User</p>
-    </div>
+<main>
+    <section class="card">
+        <h2>Freelance assistant</h2>
+        <p>Describe the task you want the system to perform.</p>
 
-    <p class="version">VERSION 2 — CLEAN DEPLOY TEST</p>
+        <div class="input-row">
+            <textarea placeholder="Example: Draft a proposal for a web app, summarize a client brief, generate a task breakdown..."></textarea>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="primary">Send</button>
+                <button class="secondary">Clear</button>
+            </div>
+        </div>
+
+        <div class="status-row">
+            <div class="status-label">
+                <div class="status-dot"></div>
+                <span>Waiting for first request.</span>
+            </div>
+            <span>Backend: freelance-assistant-2</span>
+        </div>
+
+        <div class="pipeline">
+            <span>Pipeline:</span> Source → Backend → Dashboard → User
+        </div>
+
+        <div class="footer-note">
+            This dashboard is the live production surface. When you send a task, the pipeline engages and returns the result here.
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>System snapshot</h2>
+        <div class="snapshot-list">
+            <p>• Backend: <strong>freelance-assistant-2</strong></p>
+            <p>• Mode: <strong>Production</strong></p>
+            <p>• Line: <strong>Ready</strong></p>
+            <p>• Mirror: <strong>Intact</strong></p>
+        </div>
+
+        <span class="pill">TDU · Geometric runtime</span>
+
+        <p class="footer-note">
+            This snapshot reflects the current execution posture of the freelance pipeline.  
+            Frontend is static; backend handles all task execution.
+        </p>
+    </section>
+</main>
 
 </body>
 </html>
-
