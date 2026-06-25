@@ -2,136 +2,442 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<title>TDU · Freelance Frontend</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TDU · Guided System</title>
 
 <style>
+    :root {
+        --bg: #050608;
+        --panel: #0b0e14;
+        --border: #1c2230;
+        --accent: #2f7df4;
+        --accent-soft: #1b3f7a;
+        --text: #e8ecf3;
+        --muted: #9aa3b8;
+        --danger: #e04545;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-        background: #050608;
-        color: #e8ecf3;
-        font-family: system-ui, sans-serif;
         margin: 0;
-        padding: 40px;
-        text-align: center;
+        padding: 32px;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        background: radial-gradient(circle at top, #111526 0, #050608 55%);
+        color: var(--text);
     }
 
     h1 {
-        font-size: 28px;
-        letter-spacing: 0.08em;
+        margin: 0 0 8px;
+        font-size: 26px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
         color: #9fd3ff;
-        margin-bottom: 30px;
+        text-align: center;
     }
 
-    .level {
-        margin: 20px auto;
-        padding: 20px;
-        width: 90%;
-        max-width: 500px;
-        background: #0b0e14;
-        border: 1px solid #1c2230;
-        border-radius: 10px;
-        display: none;
-    }
-
-    .level.active {
-        display: block;
-    }
-
-    button {
-        padding: 12px 20px;
-        margin-top: 15px;
-        background: #2f7df4;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-size: 14px;
-        cursor: pointer;
-    }
-
-    button.secondary {
-        background: #151922;
-        border: 1px solid #252c3b;
+    h2 {
+        margin: 0 0 8px;
+        font-size: 18px;
         color: #cfd6e5;
+    }
+
+    p {
+        margin: 4px 0;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .subtitle {
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    .layout {
+        max-width: 960px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 20px;
+    }
+
+    .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 18px 18px 20px;
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #070910;
+        border: 1px solid #20263a;
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #3fd38a;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .btn-tile {
+        border-radius: 12px;
+        border: 1px solid #20263a;
+        background: #070910;
+        padding: 12px 12px 14px;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, transform 0.08s;
+    }
+
+    .btn-tile:hover {
+        background: #0c111c;
+        border-color: var(--accent-soft);
+        transform: translateY(-1px);
+    }
+
+    .btn-title {
+        font-size: 14px;
+        color: var(--text);
+        margin-bottom: 4px;
+    }
+
+    .btn-sub {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .section-title {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: #7f8aa5;
+        margin-bottom: 10px;
+    }
+
+    .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    .chip {
+        padding: 4px 9px;
+        border-radius: 999px;
+        border: 1px solid #20263a;
+        font-size: 11px;
+        color: var(--muted);
+        cursor: pointer;
+        background: #05070c;
+        transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+
+    .chip.active {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: #eaf2ff;
+    }
+
+    .flow-step {
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed #20263a;
+    }
+
+    .flow-step:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+
+    .flow-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        color: #7f8aa5;
+        margin-bottom: 4px;
+    }
+
+    .flow-main {
+        font-size: 13px;
+        color: var(--text);
+    }
+
+    .flow-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
     }
 
     textarea {
         width: 100%;
         min-height: 80px;
+        border-radius: 10px;
+        border: 1px solid #20263a;
         background: #05070c;
-        border: 1px solid #252c3b;
-        border-radius: 8px;
-        padding: 10px;
-        color: #e8ecf3;
+        color: var(--text);
+        padding: 8px 10px;
+        font-size: 13px;
+        resize: vertical;
+        margin-top: 6px;
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
         margin-top: 10px;
     }
 
-    .output {
-        margin-top: 30px;
-        padding: 20px;
-        background: #0b0e14;
-        border: 1px solid #1c2230;
+    .btn {
+        border-radius: 999px;
+        padding: 7px 14px;
+        font-size: 12px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.12s, transform 0.08s, box-shadow 0.12s;
+    }
+
+    .btn-primary {
+        background: var(--accent);
+        color: #f5f7ff;
+        box-shadow: 0 0 0 1px #1b3f7a;
+    }
+
+    .btn-primary:hover {
+        background: #3a86ff;
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 1px #2953a3;
+    }
+
+    .btn-ghost {
+        background: #070910;
+        color: var(--muted);
+        border: 1px solid #20263a;
+    }
+
+    .btn-ghost:hover {
+        background: #0c111c;
+        color: #cfd6e5;
+    }
+
+    .btn-danger {
+        background: var(--danger);
+        color: #ffecec;
+    }
+
+    .btn-danger:hover {
+        background: #f05555;
+        transform: translateY(-1px);
+    }
+
+    .price-box, .status-box {
+        margin-top: 10px;
+        padding: 10px 12px;
         border-radius: 10px;
-        display: none;
+        border: 1px solid #20263a;
+        background: #05070c;
+        font-size: 12px;
+    }
+
+    .price-main {
+        color: #eaf2ff;
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+
+    .price-note {
+        color: var(--muted);
+    }
+
+    .status-ok {
+        color: #3fd38a;
+    }
+
+    .status-warn {
+        color: #f0c04b;
+    }
+
+    .status-fail {
+        color: #f26f6f;
+    }
+
+    .tagline {
+        margin-top: 8px;
+        font-size: 11px;
+        color: #7f8aa5;
+    }
+
+    .small-list {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--muted);
+    }
+
+    .small-list span {
+        display: inline-block;
+        margin-right: 8px;
     }
 </style>
-
 </head>
 <body>
 
-<h1>TDU · GUIDED SYSTEM</h1>
+<h1>TDU · FREELANCE FRONTEND</h1>
+<div class="subtitle">Guided tasks only · Pricing, payment, and delete handled by the system · No free‑form wandering</div>
 
-<!-- LEVEL 1 -->
-<div id="level1" class="level active">
-    <h2>Level 1 · Activation</h2>
-    <p>Begin the geometric sequence.</p>
-    <button onclick="openLevel(2)">Activate Level 1</button>
-</div>
+<div class="layout">
+    <!-- LEFT: TASK SELECTION + JOB DETAILS -->
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <div class="section-title">Task groups</div>
+                <p>Select where you want TDU to work.</p>
+            </div>
+            <div class="pill">
+                <span class="pill-dot"></span>
+                <span>System stable</span>
+            </div>
+        </div>
 
-<!-- LEVEL 2 -->
-<div id="level2" class="level">
-    <h2>Level 2 · Descent</h2>
-    <p>The system descends into execution posture.</p>
-    <button onclick="openLevel(3)">Proceed to Level 2</button>
-</div>
+        <!-- HOME BUTTONS -->
+        <div class="grid" id="homeGrid">
+            <button class="btn-tile" onclick="selectGroup('pc')">
+                <div class="btn-title">PC Janitor</div>
+                <div class="btn-sub">Clean, organize, and prioritize your local work.</div>
+            </button>
+            <button class="btn-tile" onclick="selectGroup('email')">
+                <div class="btn-title">Email Janitor</div>
+                <div class="btn-sub">Clean and organize inbox and important threads.</div>
+            </button>
+            <button class="btn-tile" onclick="selectGroup('file')">
+                <div class="btn-title">File Assistant</div>
+                <div class="btn-sub">Convert, summarize, and restructure files.</div>
+            </button>
+            <button class="btn-tile" onclick="selectGroup('freelance')">
+                <div class="btn-title">Freelance Tasks</div>
+                <div class="btn-sub">Break down work, estimate, and plan projects.</div>
+            </button>
+        </div>
 
-<!-- LEVEL 3 -->
-<div id="level3" class="level">
-    <h2>Level 3 · Execution</h2>
-    <p>Describe the task for backend execution.</p>
-    <textarea id="taskInput" placeholder="Describe the task..."></textarea>
-    <button onclick="revealOutput()">Execute</button>
-</div>
+        <!-- GROUP TASKS -->
+        <div id="groupTasks" style="display:none; margin-top:16px;">
+            <div class="section-title" id="groupTitle"></div>
+            <p id="groupDesc"></p>
 
-<!-- OUTPUT -->
-<div id="output" class="output">
-    <h2>Return · Reveal</h2>
-    <p id="outputText">The system has executed the task.</p>
-    <button class="secondary" onclick="resetSystem()">Reset</button>
-</div>
+            <div class="chips" id="taskChips"></div>
 
-<script>
-function openLevel(n) {
-    document.querySelectorAll('.level').forEach(l => l.classList.remove('active'));
-    document.getElementById('level' + n).classList.add('active');
-}
+            <div id="jobChipsWrap" style="margin-top:10px; display:none;">
+                <div class="flow-label">Job type</div>
+                <div class="chips" id="jobChips"></div>
+            </div>
 
-function revealOutput() {
-    const task = document.getElementById('taskInput').value.trim();
-    const out = document.getElementById('output');
+            <div id="detailsWrap" style="margin-top:12px; display:none;">
+                <div class="flow-label">Job details</div>
+                <div class="flow-note">TDU will use this to survey the job and generate a price.</div>
+                <textarea id="jobDetails" placeholder="Describe only what is needed for this job."></textarea>
+                <div class="controls">
+                    <button class="btn btn-primary" onclick="confirmScope()">Confirm scope</button>
+                    <button class="btn btn-ghost" onclick="resetFlow()">Back to task groups</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    document.querySelectorAll('.level').forEach(l => l.classList.remove('active'));
+    <!-- RIGHT: SYSTEM FLOW (INTERNAL ORGANS + PAYMENT + DELETE) -->
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <div class="section-title">System flow</div>
+                <p>How TDU handles this job internally.</p>
+            </div>
+        </div>
 
-    document.getElementById('outputText').innerText =
-        task ? "Task received: " + task : "Task executed.";
+        <div id="flowView">
+            <!-- STEP 1: TASK + JOB -->
+            <div class="flow-step">
+                <div class="flow-label">Step 1 · Task selection</div>
+                <div class="flow-main" id="flowTask">Waiting for you to choose a task group.</div>
+                <div class="flow-note">Only PC Janitor, Email Janitor, File Assistant, and Freelance Tasks are visible.</div>
+            </div>
 
-    out.style.display = 'block';
-}
+            <!-- STEP 2: INTERNAL SURVEY + PRICE (Sales & Proposals organ) -->
+            <div class="flow-step" id="flowPriceStep" style="display:none;">
+                <div class="flow-label">Step 2 · Job survey & price</div>
+                <div class="flow-main">Sales & Proposals organ (internal) surveys the job and generates a price.</div>
+                <div class="price-box" id="priceBox">
+                    <div class="price-main" id="priceMain">This job costs $0.00 (example).</div>
+                    <div class="price-note">
+                        This is a proposal only. No payment is transferred yet. Confirm to authorize execution.
+                    </div>
+                </div>
+                <div class="controls" style="margin-top:8px;">
+                    <button class="btn btn-primary" onclick="authorizeJob()">Confirm price & authorize job</button>
+                    <button class="btn btn-ghost" onclick="resetFlow()">Change scope</button>
+                </div>
+            </div>
 
-function resetSystem() {
-    document.getElementById('output').style.display = 'none';
-    openLevel(1);
-}
-</script>
+            <!-- STEP 3: EXECUTION -->
+            <div class="flow-step" id="flowExecStep" style="display:none;">
+                <div class="flow-label">Step 3 · Execution</div>
+                <div class="flow-main" id="execText">
+                    TDU executes the job according to the confirmed scope and price.
+                </div>
+                <div class="status-box">
+                    <div class="status-ok">Execution in progress (simulated).</div>
+                    <div class="tagline">You will see the finished job before any payment is transferred.</div>
+                </div>
+                <div class="controls" style="margin-top:8px;">
+                    <button class="btn btn-primary" onclick="showVerification()">Show finished job</button>
+                </div>
+            </div>
 
-</body>
-</html>
+            <!-- STEP 4: VERIFICATION + PAYMENT TRANSFER -->
+            <div class="flow-step" id="flowVerifyStep" style="display:none;">
+                <div class="flow-label">Step 4 · Verification & seal</div>
+                <div class="flow-main">
+                    You see the finished job. Only when you verify completion does payment transfer and the work order seal.
+                </div>
+                <div class="status-box">
+                    <div class="status-warn">If you exit here without verifying, the job is restored to its original state and no payment is executed.</div>
+                    <div class="small-list">
+                        <span>• No deliverable stored</span>
+                        <span>• No partial work retained</span>
+                        <span>• No charge applied</span>
+                    </div>
+                </div>
+                <div class="controls" style="margin-top:8px;">
+                    <button class="btn btn-primary" onclick="finalSeal()">Verify completion & finalize</button>
+                    <button class="btn btn-ghost" onclick="rollbackJob()">Exit without completion</button>
+                </div>
+            </div>
+
+            <!-- STEP 5: POST-SEAL -->
+            <div class="flow-step" id="flowPostStep" style="display:none;">
+                <div class="flow-label">Step 5 · After completion</div>
+                <div class="flow-main">
