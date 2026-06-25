@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -441,3 +441,242 @@
             <div class="flow-step" id="flowPostStep" style="display:none;">
                 <div class="flow-label">Step 5 · After completion</div>
                 <div class="flow-main">
+                    Payment has been transferred, the work order is sealed, and the job is finalized.
+                </div>
+                <div class="status-box">
+                    <div class="status-ok">Thank‑you letter is generated.</div>
+                    <div class="small-list">
+                        <span>• Job bundle offers</span>
+                        <span>• Monthly subscription offer (Freelance Pack)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DELETE BUTTON (CONTEXTUAL ONLY) -->
+            <div class="flow-step" id="flowDeleteStep" style="display:none;">
+                <div class="flow-label">Delete operations</div>
+                <div class="flow-main">
+                    Delete is never a menu. It appears only as a red button inside jobs that involve deletion.
+                </div>
+                <div class="controls" style="margin-top:8px;">
+                    <button class="btn btn-danger" onclick="runDelete()">Delete (sandboxed)</button>
+                </div>
+                <div class="status-box">
+                    <div class="status-warn">Delete follows safe → sandbox → irreversible protocol. This is simulated here.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const state = {
+    group: null,
+    task: null,
+    jobType: null,
+    price: null,
+    deleteRelevant: false
+};
+
+const GROUP_CONFIG = {
+    pc: {
+        title: "PC Janitor",
+        desc: "Clean, organize, and prioritize your local work environment.",
+        tasks: [
+            { id: "clean", label: "Clean", jobs: ["Remove duplicates", "Clear temp files", "Sweep desktop", "Sweep downloads", "Remove junk"], deleteRelevant: true },
+            { id: "organize", label: "Organize", jobs: ["Sort by type", "Sort by project", "Sort by date", "Auto‑folder", "Group active work"], deleteRelevant: false },
+            { id: "prioritize", label: "Prioritize", jobs: ["Identify important files", "Identify urgent items", "Identify active work", "Identify stale items", "Surface top priorities"], deleteRelevant: false }
+        ]
+    },
+    email: {
+        title: "Email Janitor",
+        desc: "Clean and organize inbox and important threads.",
+        tasks: [
+            { id: "cleanInbox", label: "Clean inbox", jobs: ["Remove promotions", "Archive old threads", "Sweep unread junk"], deleteRelevant: true },
+            { id: "sortSender", label: "Sort by sender", jobs: ["Group by client", "Group by internal team"], deleteRelevant: false },
+            { id: "organizeFolders", label: "Organize folders", jobs: ["Create client folders", "Create project folders"], deleteRelevant: false },
+            { id: "important", label: "Identify important messages", jobs: ["Flag critical emails", "Surface action items"], deleteRelevant: false }
+        ]
+    },
+    file: {
+        title: "File Assistant",
+        desc: "Convert, summarize, and restructure files.",
+        tasks: [
+            { id: "convert", label: "Convert files", jobs: ["PDF → DOCX", "DOCX → PDF", "Image → text"], deleteRelevant: false },
+            { id: "summarize", label: "Summarize files", jobs: ["Summarize report", "Summarize meeting notes"], deleteRelevant: false },
+            { id: "extract", label: "Extract text", jobs: ["Extract from PDF", "Extract from image"], deleteRelevant: false },
+            { id: "rename", label: "Rename batches", jobs: ["Rename by pattern", "Rename by date"], deleteRelevant: false },
+            { id: "move", label: "Move files", jobs: ["Move to project folder", "Move to archive"], deleteRelevant: false }
+        ]
+    },
+    freelance: {
+        title: "Freelance Tasks",
+        desc: "Break down work, estimate, and plan projects.",
+        tasks: [
+            { id: "breakdown", label: "Task breakdown", jobs: ["Website project", "App project", "Branding project", "General service"], deleteRelevant: false },
+            { id: "brief", label: "Client brief summary", jobs: ["Summarize discovery call", "Summarize written brief"], deleteRelevant: false },
+            { id: "estimate", label: "Project estimate", jobs: ["Website", "App", "Branding", "Consulting"], deleteRelevant: false },
+            { id: "plan", label: "Work plan", jobs: ["Weekly plan", "Milestone plan"], deleteRelevant: false }
+        ]
+    }
+};
+
+function selectGroup(groupId) {
+    state.group = groupId;
+    state.task = null;
+    state.jobType = null;
+    state.price = null;
+    state.deleteRelevant = false;
+
+    document.getElementById("homeGrid").style.display = "none";
+    document.getElementById("groupTasks").style.display = "block";
+    document.getElementById("jobChipsWrap").style.display = "none";
+    document.getElementById("detailsWrap").style.display = "none";
+
+    const cfg = GROUP_CONFIG[groupId];
+    document.getElementById("groupTitle").textContent = cfg.title;
+    document.getElementById("groupDesc").textContent = cfg.desc;
+
+    const taskChips = document.getElementById("taskChips");
+    taskChips.innerHTML = "";
+    cfg.tasks.forEach(t => {
+        const chip = document.createElement("button");
+        chip.className = "chip";
+        chip.textContent = t.label;
+        chip.onclick = () => selectTask(t.id);
+        taskChips.appendChild(chip);
+    });
+
+    document.getElementById("flowTask").textContent =
+        `You selected: ${cfg.title}. Choose a task to continue.`;
+    hideFlowStepsAfter("flowTask");
+}
+
+function selectTask(taskId) {
+    state.task = taskId;
+    state.jobType = null;
+    state.price = null;
+
+    const cfg = GROUP_CONFIG[state.group];
+    const task = cfg.tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    state.deleteRelevant = !!task.deleteRelevant;
+
+    const taskChips = document.getElementById("taskChips").children;
+    for (let chip of taskChips) chip.classList.remove("active");
+    // mark active
+    for (let chip of taskChips) {
+        if (chip.textContent === task.label) chip.classList.add("active");
+    }
+
+    const jobWrap = document.getElementById("jobChipsWrap");
+    const jobChips = document.getElementById("jobChips");
+    jobWrap.style.display = "block";
+    jobChips.innerHTML = "";
+
+    task.jobs.forEach(j => {
+        const chip = document.createElement("button");
+        chip.className = "chip";
+        chip.textContent = j;
+        chip.onclick = () => selectJobType(j);
+        jobChips.appendChild(chip);
+    });
+
+    document.getElementById("flowTask").textContent =
+        `Task selected: ${cfg.title} → ${task.label}. Choose a job type.`;
+    hideFlowStepsAfter("flowTask");
+}
+
+function selectJobType(jobLabel) {
+    state.jobType = jobLabel;
+    state.price = null;
+
+    const jobChips = document.getElementById("jobChips").children;
+    for (let chip of jobChips) chip.classList.remove("active");
+    for (let chip of jobChips) {
+        if (chip.textContent === jobLabel) chip.classList.add("active");
+    }
+
+    document.getElementById("detailsWrap").style.display = "block";
+    document.getElementById("jobDetails").value = "";
+
+    document.getElementById("flowTask").textContent =
+        `Job selected: ${GROUP_CONFIG[state.group].title} → ${jobLabel}. Provide only the details needed for this job.`;
+    hideFlowStepsAfter("flowTask");
+}
+
+function confirmScope() {
+    const details = document.getElementById("jobDetails").value.trim();
+    if (!state.group || !state.task || !state.jobType) return;
+
+    // Simulated price generation
+    const base = 75;
+    const complexity = details.length > 120 ? 2.0 : details.length > 40 ? 1.4 : 1.0;
+    const price = Math.round(base * complexity);
+    state.price = price;
+
+    document.getElementById("flowPriceStep").style.display = "block";
+    document.getElementById("priceMain").textContent =
+        `This job costs $${price.toFixed(2)} (simulated).`;
+
+    if (state.deleteRelevant) {
+        document.getElementById("flowDeleteStep").style.display = "block";
+    } else {
+        document.getElementById("flowDeleteStep").style.display = "none";
+    }
+}
+
+function authorizeJob() {
+    if (!state.price) return;
+    document.getElementById("flowExecStep").style.display = "block";
+}
+
+function showVerification() {
+    document.getElementById("flowVerifyStep").style.display = "block";
+}
+
+function finalSeal() {
+    document.getElementById("flowPostStep").style.display = "block";
+    const execText = document.getElementById("execText");
+    execText.textContent =
+        "Job executed and verified. Payment has now been transferred and the work order is sealed.";
+}
+
+function rollbackJob() {
+    resetFlow();
+    alert("Job restored to original state. No payment executed. No deliverable stored.");
+}
+
+function runDelete() {
+    alert("Delete (sandboxed) simulated. In the real system this follows safe → sandbox → irreversible protocol.");
+}
+
+function resetFlow() {
+    state.group = null;
+    state.task = null;
+    state.jobType = null;
+    state.price = null;
+    state.deleteRelevant = false;
+
+    document.getElementById("homeGrid").style.display = "grid";
+    document.getElementById("groupTasks").style.display = "none";
+    document.getElementById("jobChipsWrap").style.display = "none";
+    document.getElementById("detailsWrap").style.display = "none";
+
+    document.getElementById("flowTask").textContent =
+        "Waiting for you to choose a task group.";
+    hideFlowStepsAfter("flowTask");
+}
+
+function hideFlowStepsAfter(anchorId) {
+    document.getElementById("flowPriceStep").style.display = "none";
+    document.getElementById("flowExecStep").style.display = "none";
+    document.getElementById("flowVerifyStep").style.display = "none";
+    document.getElementById("flowPostStep").style.display = "none";
+    document.getElementById("flowDeleteStep").style.display = "none";
+}
+</script>
+
+</body>
+</html>
