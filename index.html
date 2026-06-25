@@ -468,7 +468,6 @@
         </div>
     </div>
 </div>
-
 <script>
 const state = {
     group: null,
@@ -493,4 +492,159 @@ const GROUP_CONFIG = {
         desc: "Clean and organize inbox and important threads.",
         tasks: [
             { id: "clean", label: "Clean", jobs: ["Remove spam", "Archive old mail", "Sort by sender", "Sort by project", "Clear promotions"], deleteRelevant: true },
-            { id: "organize", label: "Organize", jobs
+            { id: "organize", label: "Organize", jobs: ["Folder by project", "Folder by client", "Folder by priority", "Auto‑rules"], deleteRelevant: false },
+            { id: "prioritize", label: "Prioritize", jobs: ["Urgent threads", "Important senders", "Follow‑ups", "Starred items"], deleteRelevant: false }
+        ]
+    },
+    file: {
+        title: "File Assistant",
+        desc: "Convert, summarize, and restructure files.",
+        tasks: [
+            { id: "convert", label: "Convert", jobs: ["PDF → DOCX", "DOCX → PDF", "Image → Text", "Audio → Text"], deleteRelevant: false },
+            { id: "summarize", label: "Summarize", jobs: ["Short summary", "Detailed summary", "Bullet summary"], deleteRelevant: false },
+            { id: "restructure", label: "Restructure", jobs: ["Reformat", "Clean formatting", "Split document", "Merge documents"], deleteRelevant: false }
+        ]
+    },
+    freelance: {
+        title: "Freelance Tasks",
+        desc: "Break down work, estimate, and plan projects.",
+        tasks: [
+            { id: "breakdown", label: "Breakdown", jobs: ["Task list", "Milestones", "Dependencies"], deleteRelevant: false },
+            { id: "estimate", label: "Estimate", jobs: ["Time estimate", "Cost estimate"], deleteRelevant: false },
+            { id: "plan", label: "Plan", jobs: ["Daily plan", "Weekly plan", "Project plan"], deleteRelevant: false }
+        ]
+    }
+};
+
+function selectGroup(groupId) {
+    state.group = groupId;
+    state.task = null;
+    state.jobType = null;
+    state.deleteRelevant = false;
+
+    const group = GROUP_CONFIG[groupId];
+    document.getElementById("groupTitle").textContent = group.title;
+    document.getElementById("groupDesc").textContent = group.desc;
+
+    const chips = document.getElementById("taskChips");
+    chips.innerHTML = "";
+    group.tasks.forEach(t => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = t.label;
+        chip.onclick = () => selectTask(t);
+        chips.appendChild(chip);
+    });
+
+    document.getElementById("homeGrid").style.display = "none";
+    document.getElementById("groupTasks").style.display = "block";
+    document.getElementById("jobChipsWrap").style.display = "none";
+    document.getElementById("detailsWrap").style.display = "none";
+
+    document.getElementById("flowTask").textContent =
+        `${group.title} selected. Choose a task.`;
+}
+
+function selectTask(task) {
+    state.task = task.id;
+    state.deleteRelevant = task.deleteRelevant;
+
+    const jobWrap = document.getElementById("jobChipsWrap");
+    const jobChips = document.getElementById("jobChips");
+    jobChips.innerHTML = "";
+
+    task.jobs.forEach(j => {
+        const chip = document.createElement("div");
+        chip.className = "chip";
+        chip.textContent = j;
+        chip.onclick = () => selectJobType(j, chip);
+        jobChips.appendChild(chip);
+    });
+
+    jobWrap.style.display = "block";
+    document.getElementById("detailsWrap").style.display = "none";
+
+    document.getElementById("flowTask").textContent =
+        `Task: ${task.label}. Choose a job type.`;
+}
+
+function selectJobType(job, chip) {
+    state.jobType = job;
+
+    document.querySelectorAll("#jobChips .chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+
+    document.getElementById("detailsWrap").style.display = "block";
+
+    document.getElementById("flowTask").textContent =
+        `Task: ${state.task} → Job: ${job}. Add details.`;
+}
+
+function confirmScope() {
+    const details = document.getElementById("jobDetails").value.trim();
+    if (!details) {
+        alert("Please enter job details.");
+        return;
+    }
+
+    state.price = (Math.random() * 40 + 10).toFixed(2);
+
+    document.getElementById("priceMain").textContent =
+        `This job costs $${state.price}.`;
+
+    document.getElementById("flowPriceStep").style.display = "block";
+    document.getElementById("flowExecStep").style.display = "none";
+    document.getElementById("flowVerifyStep").style.display = "none";
+    document.getElementById("flowPostStep").style.display = "none";
+    document.getElementById("flowDeleteStep").style.display =
+        state.deleteRelevant ? "block" : "none";
+
+    document.getElementById("flowTask").textContent =
+        `Scope confirmed. Price generated.`;
+}
+
+function authorizeJob() {
+    document.getElementById("flowExecStep").style.display = "block";
+    document.getElementById("flowVerifyStep").style.display = "none";
+    document.getElementById("flowPostStep").style.display = "none";
+
+    document.getElementById("execText").textContent =
+        `Executing: ${state.group} → ${state.task} → ${state.jobType}`;
+}
+
+function showVerification() {
+    document.getElementById("flowVerifyStep").style.display = "block";
+}
+
+function finalSeal() {
+    document.getElementById("flowPostStep").style.display = "block";
+}
+
+function rollbackJob() {
+    alert("Job rolled back. No payment transferred.");
+    resetFlow();
+}
+
+function runDelete() {
+    alert("Delete executed in sandbox mode.");
+}
+
+function resetFlow() {
+    state.group = null;
+    state.task = null;
+    state.jobType = null;
+
+    document.getElementById("homeGrid").style.display = "grid";
+    document.getElementById("groupTasks").style.display = "none";
+
+    document.getElementById("flowPriceStep").style.display = "none";
+    document.getElementById("flowExecStep").style.display = "none";
+    document.getElementById("flowVerifyStep").style.display = "none";
+    document.getElementById("flowPostStep").style.display = "none";
+    document.getElementById("flowDeleteStep").style.display = "none";
+
+    document.getElementById("flowTask").textContent =
+        "Waiting for you to choose a task group.";
+}
+</script>
+
