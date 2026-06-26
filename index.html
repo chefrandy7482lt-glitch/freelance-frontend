@@ -1,33 +1,83 @@
-<script>
-async function runTDUJob(taskGroup, taskName, payload = {}) {
-  const endpoint = "https://freelance-assistant-2.onrender.com/run-task";
-
-  const packet = {
-    task_group: taskGroup,
-    task_name: taskName,
-    payload: payload
-  };
-
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(packet)
-    });
-
-    const result = await response.json();
-
-    // Output to console
-    console.log("TDU RESULT:", result);
-
-    // Output to UI
-    const output = document.getElementById("tdu-output");
-    if (output) {
-      output.textContent = JSON.stringify(result, null, 2);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TDU Freelance Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
     }
+    h1 {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 12px 20px;
+      margin: 10px 0;
+      font-size: 16px;
+      cursor: pointer;
+      width: 250px;
+    }
+    #tdu-output {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      font-family: monospace;
+      min-height: 150px;
+    }
+  </style>
+</head>
 
-  } catch (error) {
-    console.error("TDU ERROR:", error);
-  }
-}
-</script>
+<body>
+
+  <h1>TDU Freelance Engine</h1>
+
+  <button onclick="runTDUJob('pc_janitor', 'clean')">
+    Run PC Janitor
+  </button>
+
+  <button onclick="runTDUJob('email_janitor', 'process')">
+    Run Email Janitor
+  </button>
+
+  <button onclick="runTDUJob('freelance', 'breakdown', { text: 'Build a website' })">
+    Freelance Breakdown
+  </button>
+
+  <pre id="tdu-output">Waiting for task...</pre>
+
+  <script>
+    async function runTDUJob(taskGroup, taskName, payload = {}) {
+      const endpoint = "https://freelance-assistant-2.onrender.com/run-task";
+
+      const packet = {
+        task_group: taskGroup,
+        task_name: taskName,
+        payload: payload
+      };
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(packet)
+        });
+
+        const result = await response.json();
+
+        const output = document.getElementById("tdu-output");
+        output.textContent = JSON.stringify(result, null, 2);
+
+      } catch (error) {
+        console.error("TDU ERROR:", error);
+        const output = document.getElementById("tdu-output");
+        output.textContent = "Error: " + error;
+      }
+    }
+  </script>
+
+</body>
+</html>
