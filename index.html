@@ -16,16 +16,18 @@ async function runTDUJob(taskGroup, taskName, payload = {}) {
     });
 
     const result = await response.json();
+
+    // Output to console
     console.log("TDU RESULT:", result);
 
-    // Display result in your UI
+    // Output to UI
     const output = document.getElementById("tdu-output");
     if (output) {
-      output.innerText = JSON.stringify(result, null, 2);
+      output.textContent = JSON.stringify(result, null, 2);
     }
 
-  } catch (err) {
-    console.error("TDU ERROR:", err);
+  } catch (error) {
+    console.error("TDU ERROR:", error);
   }
 }
 </script>
