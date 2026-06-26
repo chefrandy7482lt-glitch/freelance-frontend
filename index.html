@@ -1,650 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>TDU · Freelance Frontend</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-    :root {
-        --bg: #050608;
-        --panel: #0b0e14;
-        --border: #1c2230;
-        --accent: #2f7df4;
-        --accent-soft: #1b3f7a;
-        --text: #e8ecf3;
-        --muted: #9aa3b8;
-        --danger: #e04545;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-        margin: 0;
-        padding: 32px;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        background: radial-gradient(circle at top, #111526 0, #050608 55%);
-        color: var(--text);
-    }
-
-    h1 {
-        margin: 0 0 8px;
-        font-size: 26px;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: #9fd3ff;
-        text-align: center;
-    }
-
-    h2 {
-        margin: 0 0 8px;
-        font-size: 18px;
-        color: #cfd6e5;
-    }
-
-    p {
-        margin: 4px 0;
-        color: var(--muted);
-        font-size: 14px;
-    }
-
-    .subtitle {
-        text-align: center;
-        margin-bottom: 24px;
-        font-size: 13px;
-        color: var(--muted);
-    }
-
-    .layout {
-        max-width: 960px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-        gap: 20px;
-    }
-
-    .panel {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 18px 18px 20px;
-    }
-
-    .panel-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-
-    .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: #070910;
-        border: 1px solid #20263a;
-        font-size: 11px;
-        color: var(--muted);
-    }
-
-    .pill-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #3fd38a;
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-    }
-
-    .btn-tile {
-        border-radius: 12px;
-        border: 1px solid #20263a;
-        background: #070910;
-        padding: 12px 12px 14px;
-        text-align: left;
-        cursor: pointer;
-        transition: background 0.15s, border-color 0.15s, transform 0.08s;
-    }
-
-    .btn-tile:hover {
-        background: #0c111c;
-        border-color: var(--accent-soft);
-        transform: translateY(-1px);
-    }
-
-    .btn-title {
-        font-size: 14px;
-        color: var(--text);
-        margin-bottom: 4px;
-    }
-
-    .btn-sub {
-        font-size: 12px;
-        color: var(--muted);
-    }
-
-    .section-title {
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        color: #7f8aa5;
-        margin-bottom: 10px;
-    }
-
-    .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 8px;
-    }
-
-    .chip {
-        padding: 4px 9px;
-        border-radius: 999px;
-        border: 1px solid #20263a;
-        font-size: 11px;
-        color: var(--muted);
-        cursor: pointer;
-        background: #05070c;
-        transition: background 0.12s, border-color 0.12s, color 0.12s;
-    }
-
-    .chip.active {
-        background: var(--accent-soft);
-        border-color: var(--accent);
-        color: #eaf2ff;
-    }
-
-    .flow-step {
-        margin-bottom: 14px;
-        padding-bottom: 10px;
-        border-bottom: 1px dashed #20263a;
-    }
-
-    .flow-step:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-        margin-bottom: 0;
-    }
-
-    .flow-label {
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        color: #7f8aa5;
-        margin-bottom: 4px;
-    }
-
-    .flow-main {
-        font-size: 13px;
-        color: var(--text);
-    }
-
-    .flow-note {
-        font-size: 12px;
-        color: var(--muted);
-        margin-top: 2px;
-    }
-
-    textarea {
-        width: 100%;
-        min-height: 80px;
-        border-radius: 10px;
-        border: 1px solid #20263a;
-        background: #05070c;
-        color: var(--text);
-        padding: 8px 10px;
-        font-size: 13px;
-        resize: vertical;
-        margin-top: 6px;
-    }
-
-    .controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
-    }
-
-    .btn {
-        border-radius: 999px;
-        padding: 7px 14px;
-        font-size: 12px;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: background 0.12s, transform 0.08s, box-shadow 0.12s;
-    }
-
-    .btn-primary {
-        background: var(--accent);
-        color: #f5f7ff;
-        box-shadow: 0 0 0 1px #1b3f7a;
-    }
-
-    .btn-primary:hover {
-        background: #3a86ff;
-        transform: translateY(-1px);
-        box-shadow: 0 0 0 1px #2953a3;
-    }
-
-    .btn-ghost {
-        background: #070910;
-        color: var(--muted);
-        border: 1px solid #20263a;
-    }
-
-    .btn-ghost:hover {
-        background: #0c111c;
-        color: #cfd6e5;
-    }
-
-    .btn-danger {
-        background: var(--danger);
-        color: #ffecec;
-    }
-
-    .btn-danger:hover {
-        background: #f05555;
-        transform: translateY(-1px);
-    }
-
-    .price-box, .status-box {
-        margin-top: 10px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid #20263a;
-        background: #05070c;
-        font-size: 12px;
-    }
-
-    .price-main {
-        color: #eaf2ff;
-        font-size: 13px;
-        margin-bottom: 4px;
-    }
-
-    .price-note {
-        color: var(--muted);
-    }
-
-    .status-ok {
-        color: #3fd38a;
-    }
-
-    .status-warn {
-        color: #f0c04b;
-    }
-
-    .status-fail {
-        color: #f26f6f;
-    }
-
-    .tagline {
-        margin-top: 8px;
-        font-size: 11px;
-        color: #7f8aa5;
-    }
-
-    .small-list {
-        margin-top: 6px;
-        font-size: 11px;
-        color: var(--muted);
-    }
-
-    .small-list span {
-        display: inline-block;
-        margin-right: 8px;
-    }
-</style>
+  <meta charset="UTF-8" />
+  <title>TDU Freelance – Real Engine</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 20px; background: #0b1020; color: #f5f5f5; }
+    h1 { margin-bottom: 8px; }
+    .subtitle { color: #9aa0b8; margin-bottom: 20px; }
+    textarea { width: 100%; height: 140px; padding: 10px; border-radius: 6px; border: 1px solid #333; background: #111528; color: #f5f5f5; resize: vertical; }
+    button { margin-top: 12px; padding: 10px 18px; border-radius: 6px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; }
+    button:disabled { background: #1f2937; cursor: default; }
+    .status { margin-top: 10px; font-size: 0.9rem; color: #9aa0b8; }
+    .output { margin-top: 18px; padding: 12px; border-radius: 6px; background: #111528; border: 1px solid #1f2937; white-space: pre-wrap; font-size: 0.95rem; }
+    .error { color: #f97373; }
+  </style>
 </head>
 <body>
+  <h1>TDU Freelance – Direct Engine Call</h1>
+  <div class="subtitle">
+    This screen talks to your Cloudflare Worker for real. No simulation.
+  </div>
 
-<h1>TDU · FREELANCE FRONTEND</h1>
-<div class="subtitle">Guided tasks only · Pricing, payment, and delete handled by the system · No free‑form wandering</div>
+  <label for="jobInput">Job / prompt:</label>
+  <textarea id="jobInput" placeholder="Example: tell me about the different types of files in the computer"></textarea>
 
-<div class="layout">
-    <!-- LEFT: TASK SELECTION + JOB DETAILS -->
-    <div class="panel">
-        <div class="panel-header">
-            <div>
-                <div class="section-title">Task groups</div>
-                <p>Select where you want TDU to work.</p>
-            </div>
-            <div class="pill">
-                <span class="pill-dot"></span>
-                <span>System stable</span>
-            </div>
-        </div>
+  <button id="runJobBtn">Run job through Worker</button>
+  <div id="status" class="status"></div>
+  <div id="output" class="output"></div>
 
-        <!-- HOME BUTTONS -->
-        <div class="grid" id="homeGrid">
-            <button class="btn-tile" onclick="selectGroup('pc')">
-                <div class="btn-title">PC Janitor</div>
-                <div class="btn-sub">Clean, organize, and prioritize your local work.</div>
-            </button>
-            <button class="btn-tile" onclick="selectGroup('email')">
-                <div class="btn-title">Email Janitor</div>
-                <div class="btn-sub">Clean and organize inbox and important threads.</div>
-            </button>
-            <button class="btn-tile" onclick="selectGroup('file')">
-                <div class="btn-title">File Assistant</div>
-                <div class="btn-sub">Convert, summarize, and restructure files.</div>
-            </button>
-            <button class="btn-tile" onclick="selectGroup('freelance')">
-                <div class="btn-title">Freelance Tasks</div>
-                <div class="btn-sub">Break down work, estimate, and plan projects.</div>
-            </button>
-        </div>
+  <script>
+    const WORKER_URL = "https://tdu-freelance-backend.tdu-freelance.workers.dev/file/summarize";
 
-        <!-- GROUP TASKS -->
-        <div id="groupTasks" style="display:none; margin-top:16px;">
-            <div class="section-title" id="groupTitle"></div>
-            <p id="groupDesc"></p>
+    const jobInput = document.getElementById("jobInput");
+    const runJobBtn = document.getElementById("runJobBtn");
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
 
-            <div class="chips" id="taskChips"></div>
-
-            <div id="jobChipsWrap" style="margin-top:10px; display:none;">
-                <div class="flow-label">Job type</div>
-                <div class="chips" id="jobChips"></div>
-            </div>
-
-            <div id="detailsWrap" style="margin-top:12px; display:none;">
-                <div class="flow-label">Job details</div>
-                <div class="flow-note">TDU will use this to survey the job and generate a price.</div>
-                <textarea id="jobDetails" placeholder="Describe only what is needed for this job."></textarea>
-                <div class="controls">
-                    <button class="btn btn-primary" onclick="confirmScope()">Confirm scope</button>
-                    <button class="btn btn-ghost" onclick="resetFlow()">Back to task groups</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- RIGHT: SYSTEM FLOW (INTERNAL ORGANS + PAYMENT + DELETE) -->
-    <div class="panel">
-        <div class="panel-header">
-            <div>
-                <div class="section-title">System flow</div>
-                <p>How TDU handles this job internally.</p>
-            </div>
-        </div>
-
-        <div id="flowView">
-            <!-- STEP 1: TASK + JOB -->
-            <div class="flow-step">
-                <div class="flow-label">Step 1 · Task selection</div>
-                <div class="flow-main" id="flowTask">Waiting for you to choose a task group.</div>
-                <div class="flow-note">Only PC Janitor, Email Janitor, File Assistant, and Freelance Tasks are visible.</div>
-            </div>
-
-            <!-- STEP 2: INTERNAL SURVEY + PRICE (Sales & Proposals organ) -->
-            <div class="flow-step" id="flowPriceStep" style="display:none;">
-                <div class="flow-label">Step 2 · Job survey & price</div>
-                <div class="flow-main">Sales & Proposals organ (internal) surveys the job and generates a price.</div>
-                <div class="price-box" id="priceBox">
-                    <div class="price-main" id="priceMain">This job costs $0.00 (example).</div>
-                    <div class="price-note">
-                        This is a proposal only. No payment is transferred yet. Confirm to authorize execution.
-                    </div>
-                </div>
-                <div class="controls" style="margin-top:8px;">
-                    <button class="btn btn-primary" onclick="authorizeJob()">Confirm price & authorize job</button>
-                    <button class="btn btn-ghost" onclick="resetFlow()">Change scope</button>
-                </div>
-            </div>
-
-            <!-- STEP 3: EXECUTION -->
-            <div class="flow-step" id="flowExecStep" style="display:none;">
-                <div class="flow-label">Step 3 · Execution</div>
-                <div class="flow-main" id="execText">
-                    TDU executes the job according to the confirmed scope and price.
-                </div>
-                <div class="status-box">
-                    <div class="status-ok">Execution in progress (simulated).</div>
-                    <div class="tagline">You will see the finished job before any payment is transferred.</div>
-                </div>
-                <div class="controls" style="margin-top:8px;">
-                    <button class="btn btn-primary" onclick="showVerification()">Show finished job</button>
-                </div>
-            </div>
-
-            <!-- STEP 4: VERIFICATION + PAYMENT TRANSFER -->
-            <div class="flow-step" id="flowVerifyStep" style="display:none;">
-                <div class="flow-label">Step 4 · Verification & seal</div>
-                <div class="flow-main">
-                    You see the finished job. Only when you verify completion does payment transfer and the work order seal.
-                </div>
-                <div class="status-box">
-                    <div class="status-warn">If you exit here without verifying, the job is restored to its original state and no payment is executed.</div>
-                    <div class="small-list">
-                        <span>• No deliverable stored</span>
-                        <span>• No partial work retained</span>
-                        <span>• No charge applied</span>
-                    </div>
-                </div>
-                <div class="controls" style="margin-top:8px;">
-                    <button class="btn btn-primary" onclick="finalSeal()">Verify completion & finalize</button>
-                    <button class="btn btn-ghost" onclick="rollbackJob()">Exit without completion</button>
-                </div>
-            </div>
-
-            <!-- STEP 5: POST-SEAL -->
-            <div class="flow-step" id="flowPostStep" style="display:none;">
-                <div class="flow-label">Step 5 · After completion</div>
-                <div class="flow-main">
-                    Payment has been transferred, the work order is sealed, and the job is finalized.
-                </div>
-                <div class="status-box">
-                    <div class="status-ok">Thank‑you letter is generated.</div>
-                    <div class="small-list">
-                        <span>• Job bundle offers</span>
-                        <span>• Monthly subscription offer (Freelance Pack)</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DELETE BUTTON (CONTEXTUAL ONLY) -->
-            <div class="flow-step" id="flowDeleteStep" style="display:none;">
-                <div class="flow-label">Delete operations</div>
-                <div class="flow-main">
-                    Delete is never a menu. It appears only as a red button inside jobs that involve deletion.
-                </div>
-                <div class="controls" style="margin-top:8px;">
-                    <button class="btn btn-danger" onclick="runDelete()">Delete (sandboxed)</button>
-                </div>
-                <div class="status-box">
-                    <div class="status-warn">Delete follows safe → sandbox → irreversible protocol. This is simulated here.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-const state = {
-    group: null,
-    task: null,
-    jobType: null,
-    price: null,
-    deleteRelevant: false
-};
-
-const GROUP_CONFIG = {
-    pc: {
-        title: "PC Janitor",
-        desc: "Clean, organize, and prioritize your local work environment.",
-        tasks: [
-            { id: "clean", label: "Clean", jobs: ["Remove duplicates", "Clear temp files", "Sweep desktop", "Sweep downloads", "Remove junk"], deleteRelevant: true },
-            { id: "organize", label: "Organize", jobs: ["Sort by type", "Sort by project", "Sort by date", "Auto‑folder", "Group active work"], deleteRelevant: false },
-            { id: "prioritize", label: "Prioritize", jobs: ["Identify important files", "Identify urgent items", "Identify active work", "Identify stale items", "Surface top priorities"], deleteRelevant: false }
-        ]
-    },
-    email: {
-        title: "Email Janitor",
-        desc: "Clean and organize inbox and important threads.",
-        tasks: [
-            { id: "clean", label: "Clean", jobs: ["Remove spam", "Archive old mail", "Sort by sender", "Sort by project", "Clear promotions"], deleteRelevant: true },
-            { id: "organize", label: "Organize", jobs: ["Folder by project", "Folder by client", "Folder by priority", "Auto‑rules"], deleteRelevant: false },
-            { id: "prioritize", label: "Prioritize", jobs: ["Urgent threads", "Important senders", "Follow‑ups", "Starred items"], deleteRelevant: false }
-        ]
-    },
-    file: {
-        title: "File Assistant",
-        desc: "Convert, summarize, and restructure files.",
-        tasks: [
-            { id: "convert", label: "Convert", jobs: ["PDF → DOCX", "DOCX → PDF", "Image → Text", "Audio → Text"], deleteRelevant: false },
-            { id: "summarize", label: "Summarize", jobs: ["Short summary", "Detailed summary", "Bullet summary"], deleteRelevant: false },
-            { id: "restructure", label: "Restructure", jobs: ["Reformat", "Clean formatting", "Split document", "Merge documents"], deleteRelevant: false }
-        ]
-    },
-    freelance: {
-        title: "Freelance Tasks",
-        desc: "Break down work, estimate, and plan projects.",
-        tasks: [
-            { id: "breakdown", label: "Breakdown", jobs: ["Task list", "Milestones", "Dependencies"], deleteRelevant: false },
-            { id: "estimate", label: "Estimate", jobs: ["Time estimate", "Cost estimate"], deleteRelevant: false },
-            { id: "plan", label: "Plan", jobs: ["Daily plan", "Weekly plan", "Project plan"], deleteRelevant: false }
-        ]
-    }
-};
-
-function selectGroup(groupId) {
-    state.group = groupId;
-    state.task = null;
-    state.jobType = null;
-    state.deleteRelevant = false;
-
-    const group = GROUP_CONFIG[groupId];
-    document.getElementById("groupTitle").textContent = group.title;
-    document.getElementById("groupDesc").textContent = group.desc;
-
-    const chips = document.getElementById("taskChips");
-    chips.innerHTML = "";
-    group.tasks.forEach(t => {
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = t.label;
-        chip.onclick = () => selectTask(t);
-        chips.appendChild(chip);
-    });
-
-    document.getElementById("homeGrid").style.display = "none";
-    document.getElementById("groupTasks").style.display = "block";
-    document.getElementById("jobChipsWrap").style.display = "none";
-    document.getElementById("detailsWrap").style.display = "none";
-
-    document.getElementById("flowTask").textContent =
-        `${group.title} selected. Choose a task.`;
-}
-
-function selectTask(task) {
-    state.task = task.id;
-    state.deleteRelevant = task.deleteRelevant;
-
-    const jobWrap = document.getElementById("jobChipsWrap");
-    const jobChips = document.getElementById("jobChips");
-    jobChips.innerHTML = "";
-
-    task.jobs.forEach(j => {
-        const chip = document.createElement("div");
-        chip.className = "chip";
-        chip.textContent = j;
-        chip.onclick = () => selectJobType(j, chip);
-        jobChips.appendChild(chip);
-    });
-
-    jobWrap.style.display = "block";
-    document.getElementById("detailsWrap").style.display = "none";
-
-    document.getElementById("flowTask").textContent =
-        `Task: ${task.label}. Choose a job type.`;
-}
-
-function selectJobType(job, chip) {
-    state.jobType = job;
-
-    document.querySelectorAll("#jobChips .chip").forEach(c => c.classList.remove("active"));
-    chip.classList.add("active");
-
-    document.getElementById("detailsWrap").style.display = "block";
-
-    document.getElementById("flowTask").textContent =
-        `Task: ${state.task} → Job: ${job}. Add details.`;
-}
-
-function confirmScope() {
-    const details = document.getElementById("jobDetails").value.trim();
-    if (!details) {
-        alert("Please enter job details.");
+    async function runJob() {
+      const text = jobInput.value.trim();
+      if (!text) {
+        statusEl.textContent = "Enter a job or prompt first.";
         return;
+      }
+
+      runJobBtn.disabled = true;
+      statusEl.textContent = "Sending job to Worker...";
+      outputEl.textContent = "";
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text })
+        });
+
+        if (!res.ok) {
+          statusEl.textContent = "Worker returned an error (" + res.status + ").";
+          const errText = await res.text();
+          outputEl.textContent = errText;
+          runJobBtn.disabled = false;
+          return;
+        }
+
+        const data = await res.json();
+        statusEl.textContent = "Job completed.";
+        outputEl.textContent = JSON.stringify(data, null, 2);
+      } catch (e) {
+        statusEl.textContent = "Network or Worker error.";
+        outputEl.textContent = String(e);
+      } finally {
+        runJobBtn.disabled = false;
+      }
     }
 
-    state.price = (Math.random() * 40 + 10).toFixed(2);
-
-    document.getElementById("priceMain").textContent =
-        `This job costs $${state.price}.`;
-
-    document.getElementById("flowPriceStep").style.display = "block";
-    document.getElementById("flowExecStep").style.display = "none";
-    document.getElementById("flowVerifyStep").style.display = "none";
-    document.getElementById("flowPostStep").style.display = "none";
-    document.getElementById("flowDeleteStep").style.display =
-        state.deleteRelevant ? "block" : "none";
-
-    document.getElementById("flowTask").textContent =
-        `Scope confirmed. Price generated.`;
-}
-
-function authorizeJob() {
-    document.getElementById("flowExecStep").style.display = "block";
-    document.getElementById("flowVerifyStep").style.display = "none";
-    document.getElementById("flowPostStep").style.display = "none";
-
-    document.getElementById("execText").textContent =
-        `Executing: ${state.group} → ${state.task} → ${state.jobType}`;
-}
-
-function showVerification() {
-    document.getElementById("flowVerifyStep").style.display = "block";
-}
-
-function finalSeal() {
-    document.getElementById("flowPostStep").style.display = "block";
-}
-
-function rollbackJob() {
-    alert("Job rolled back. No payment transferred.");
-    resetFlow();
-}
-
-function runDelete() {
-    alert("Delete executed in sandbox mode.");
-}
-
-function resetFlow() {
-    state.group = null;
-    state.task = null;
-    state.jobType = null;
-
-    document.getElementById("homeGrid").style.display = "grid";
-    document.getElementById("groupTasks").style.display = "none";
-
-    document.getElementById("flowPriceStep").style.display = "none";
-    document.getElementById("flowExecStep").style.display = "none";
-    document.getElementById("flowVerifyStep").style.display = "none";
-    document.getElementById("flowPostStep").style.display = "none";
-    document.getElementById("flowDeleteStep").style.display = "none";
-
-    document.getElementById("flowTask").textContent =
-        "Waiting for you to choose a task group.";
-}
-</script>
-
+    runJobBtn.addEventListener("click", runJob);
+  </script>
+</body>
+</html>
