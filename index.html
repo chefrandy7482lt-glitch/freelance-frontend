@@ -2,82 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TDU Freelance Dashboard</title>
+  <title>TDU Freelance Engine</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
+    body { font-family: system-ui, sans-serif; background:#0b0c10; color:#e5e5e5; margin:0; padding:2rem; }
+    h1 { margin-bottom:0.5rem; }
+    .subtitle { color:#9fa4b8; margin-bottom:1.5rem; }
+    .grid { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
     button {
-      padding: 12px 20px;
-      margin: 10px 0;
-      font-size: 16px;
-      cursor: pointer;
-      width: 250px;
+      background:#1f2833; color:#e5e5e5; border:1px solid #45a29e;
+      padding:0.75rem 1.25rem; border-radius:6px; cursor:pointer; font-size:0.95rem;
     }
-    #tdu-output {
-      margin-top: 20px;
-      padding: 15px;
-      background: #fff;
-      border: 1px solid #ccc;
-      white-space: pre-wrap;
-      font-family: monospace;
-      min-height: 150px;
+    button:hover { background:#45a29e; color:#0b0c10; }
+    .output {
+      background:#1f2833; border:1px solid #45a29e; border-radius:6px;
+      padding:1rem; min-height:150px; white-space:pre-wrap; font-size:0.9rem;
     }
   </style>
 </head>
-
 <body>
-
   <h1>TDU Freelance Engine</h1>
+  <div class="subtitle">Run jobs for users: PC Janitor, Email Janitor, Freelance Breakdown.</div>
 
-  <button onclick="runTDUJob('pc_janitor', 'clean')">
-    Run PC Janitor
-  </button>
+  <div class="grid">
+    <button onclick="runJob('pc_janitor')">Run PC Janitor</button>
+    <button onclick="runJob('email_janitor')">Run Email Janitor</button>
+    <button onclick="runJob('freelance_breakdown')">Run Freelance Breakdown</button>
+  </div>
 
-  <button onclick="runTDUJob('email_janitor', 'process')">
-    Run Email Janitor
-  </button>
-
-  <button onclick="runTDUJob('freelance', 'breakdown', { text: 'Build a website' })">
-    Freelance Breakdown
-  </button>
-
-  <pre id="tdu-output">Waiting for task...</pre>
+  <div class="output" id="output">Job output will appear here.</div>
 
   <script>
-    async function runTDUJob(taskGroup, taskName, payload = {}) {
-      const endpoint = "https://freelance-assistant-2.onrender.com/run-task";
+    const backendUrl = "https://YOUR-BACKEND.onrender.com/run-task"; // replace with your real backend URL
 
-      const packet = {
-        task_group: taskGroup,
-        task_name: taskName,
-        payload: payload
-      };
+    async function runJob(jobType) {
+      const out = document.getElementById("output");
+      out.textContent = `Running ${jobType}...`;
 
       try {
-        const response = await fetch(endpoint, {
+        const res = await fetch(backendUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(packet)
+          body: JSON.stringify({ job_type: jobType })
         });
 
-        const result = await response.json();
+        if (!res.ok) {
+          out.textContent = `Error: ${res.status} ${res.statusText}`;
+          return;
+        }
 
-        const output = document.getElementById("tdu-output");
-        output.textContent = JSON.stringify(result, null, 2);
-
-      } catch (error) {
-        console.error("TDU ERROR:", error);
-        const output = document.getElementById("tdu-output");
-        output.textContent = "Error: " + error;
+        const data = await res.json().catch(() => null);
+        out.textContent = data ? JSON.stringify(data, null, 2) : "Job completed.";
+      } catch (err) {
+        out.textContent = `Error: ${err}`;
       }
     }
   </script>
-
 </body>
 </html>
