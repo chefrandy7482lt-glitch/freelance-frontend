@@ -1,0 +1,31 @@
+<script>
+async function runTDUJob(taskGroup, taskName, payload = {}) {
+  const endpoint = "https://freelance-assistant-2.onrender.com/run-task";
+
+  const packet = {
+    task_group: taskGroup,
+    task_name: taskName,
+    payload: payload
+  };
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(packet)
+    });
+
+    const result = await response.json();
+    console.log("TDU RESULT:", result);
+
+    // Display result in your UI
+    const output = document.getElementById("tdu-output");
+    if (output) {
+      output.innerText = JSON.stringify(result, null, 2);
+    }
+
+  } catch (err) {
+    console.error("TDU ERROR:", err);
+  }
+}
+</script>
