@@ -1,61 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TDU Freelance Engine</title>
-  <style>
-    body { font-family: system-ui, sans-serif; background:#0b0c10; color:#e5e5e5; margin:0; padding:2rem; }
-    h1 { margin-bottom:0.5rem; }
-    .subtitle { color:#9fa4b8; margin-bottom:1.5rem; }
-    .grid { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+<meta charset="UTF-8">
+<title>TDU Freelance Portal</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        margin-top: 30px;
+        font-size: 28px;
+        color: #333;
+    }
+
+    .button-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        width: 90%;
+        max-width: 600px;
+        margin-top: 20px;
+    }
+
     button {
-      background:#1f2833; color:#e5e5e5; border:1px solid #45a29e;
-      padding:0.75rem 1.25rem; border-radius:6px; cursor:pointer; font-size:0.95rem;
+        padding: 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background: #0078ff;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s;
     }
-    button:hover { background:#45a29e; color:#0b0c10; }
-    .output {
-      background:#1f2833; border:1px solid #45a29e; border-radius:6px;
-      padding:1rem; min-height:150px; white-space:pre-wrap; font-size:0.9rem;
+
+    button:hover {
+        background: #005fcc;
     }
-  </style>
+
+    #job-panel {
+        margin-top: 30px;
+        width: 90%;
+        max-width: 600px;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: none;
+    }
+
+    input, textarea {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    #submit-btn {
+        margin-top: 20px;
+        background: #28a745;
+    }
+
+    #submit-btn:hover {
+        background: #1e7e34;
+    }
+
+    #download-section {
+        margin-top: 20px;
+        display: none;
+    }
+</style>
 </head>
+
 <body>
-  <h1>TDU Freelance Engine</h1>
-  <div class="subtitle">Run jobs for users: PC Janitor, Email Janitor, Freelance Breakdown.</div>
 
-  <div class="grid">
-    <button onclick="runJob('pc_janitor')">Run PC Janitor</button>
-    <button onclick="runJob('email_janitor')">Run Email Janitor</button>
-    <button onclick="runJob('freelance_breakdown')">Run Freelance Breakdown</button>
-  </div>
+<h1>TDU Freelance Portal</h1>
 
-  <div class="output" id="output">Job output will appear here.</div>
+<div class="button-grid">
+    <button onclick="openJob('Email Janitor')">Email Janitor</button>
+    <button onclick="openJob('PC Janitor')">PC Janitor</button>
+    <button onclick="openJob('File Assistant')">File Assistant</button>
+    <button onclick="openJob('Program Builder')">Program Builder</button>
+    <button onclick="openJob('Document Builder')">Document Builder</button>
+    <button onclick="openJob('Resume Builder')">Resume Builder</button>
+    <button onclick="openJob('Website Builder')">Website Builder</button>
+    <button onclick="openJob('Data Entry')">Data Entry</button>
+    <button onclick="openJob('Photo Restoration')">Photo Restoration</button>
+    <button onclick="openJob('Genealogy Research')">Genealogy Research</button>
+    <button onclick="openJob('Document Formatting')">Document Formatting</button>
+    <button onclick="openJob('Custom Job')">Custom Job</button>
+</div>
 
-  <script>
-   const backendUrl = "https://tdu-freelance-backend.tdu-freelance.workers.dev/run-task";
+<div id="job-panel">
+    <h2 id="job-title"></h2>
 
-    async function runJob(jobType) {
-      const out = document.getElementById("output");
-      out.textContent = `Running ${jobType}...`;
+    <label>Upload Files (if needed):</label>
+    <input type="file" id="file-input" multiple>
 
-      try {
-        const res = await fetch(backendUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ job_type: jobType })
-        });
+    <label>Optional Notes:</label>
+    <textarea id="notes-input" rows="4"></textarea>
 
-        if (!res.ok) {
-          out.textContent = `Error: ${res.status} ${res.statusText}`;
-          return;
-        }
+    <button id="submit-btn" onclick="submitJob()">Submit Job</button>
 
-        const data = await res.json().catch(() => null);
-        out.textContent = data ? JSON.stringify(data, null, 2) : "Job completed.";
-      } catch (err) {
-        out.textContent = `Error: ${err}`;
-      }
+    <div id="download-section">
+        <h3>Your job is complete.</h3>
+        <button onclick="downloadResults()">Download Results</button>
+    </div>
+</div>
+
+<script>
+const BACKEND = "https://tdu-backend-new.tdu-freelance.workers.dev";
+
+let currentJob = "";
+
+function openJob(jobName) {
+    currentJob = jobName;
+    document.getElementById("job-title").innerText = jobName;
+    document.getElementById("job-panel").style.display = "block";
+}
+
+async function submitJob() {
+    const notes = document.getElementById("notes-input").value;
+    const files = document.getElementById("file-input").files;
+
+    const formData = new FormData();
+    formData.append("job", currentJob);
+    formData.append("notes", notes);
+
+    for (let f of files) {
+        formData.append("files", f);
     }
-  </script>
+
+    await fetch(`${BACKEND}/tdu/task/create`, {
+        method: "POST",
+        body: formData
+    });
+
+    document.getElementById("download-section").style.display = "block";
+}
+
+async function downloadResults() {
+    const res = await fetch(`${BACKEND}/tdu/task/list`);
+    const data = await res.json();
+
+    alert("Results retrieved. (In real deployment, this downloads a file.)");
+}
+</script>
+
 </body>
 </html>
