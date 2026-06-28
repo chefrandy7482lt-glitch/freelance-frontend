@@ -3,164 +3,75 @@
 <head>
   <title>TDU Freelance Portal</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
+    body { font-family: Arial; background: #f5f5f5; margin: 0; }
+    header { background: #0078ff; color: white; padding: 20px; text-align: center; }
+    main { padding: 30px; max-width: 900px; margin: auto; }
+    .button, .task {
+      display: block; width: 260px; margin: 10px auto; padding: 15px;
+      background: #0078ff; color: white; border-radius: 8px;
+      text-align: center; cursor: pointer; font-size: 18px;
     }
-    header {
-      background: #0078ff;
-      color: white;
-      padding: 20px;
-      text-align: center;
+    .button:hover, .task:hover { background: #005fcc; }
+    .section, .tasks, .action {
+      display: none; background: white; padding: 25px; border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); margin-top: 20px;
     }
-    main {
-      padding: 30px;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .button {
-      display: block;
-      width: 260px;
-      margin: 10px auto;
-      padding: 15px;
-      background: #0078ff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
-      cursor: pointer;
-      text-align: center;
-    }
-    .button:hover {
-      background: #005fcc;
-    }
-    .section {
-      display: none;
-      background: white;
-      padding: 25px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      margin-top: 20px;
-    }
-    .back {
-      margin-top: 20px;
-      display: inline-block;
-      padding: 10px 15px;
-      background: #0078ff;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    .back { margin-top: 20px; padding: 10px 15px; background: #0078ff;
+      color: white; border-radius: 6px; cursor: pointer; display: inline-block; }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>TDU Freelance Portal</h1>
-  </header>
+  <header><h1>TDU Freelance Portal</h1></header>
 
-  <!-- HOME SCREEN -->
-  <main id="home">
-    <button class="button" onclick="openSection('email')">Email Janitor</button>
-    <button class="button" onclick="openSection('pc')">PC Janitor</button>
-    <button class="button" onclick="openSection('file')">File Assistant</button>
-    <button class="button" onclick="openSection('program')">Program Builder</button>
-    <button class="button" onclick="openSection('document')">Document Builder</button>
-    <button class="button" onclick="openSection('resume')">Resume Builder</button>
-    <button class="button" onclick="openSection('website')">Website Builder</button>
-    <button class="button" onclick="openSection('data')">Data Entry</button>
-    <button class="button" onclick="openSection('photo')">Photo Restoration</button>
-    <button class="button" onclick="openSection('format')">Document Formatting</button>
-    <button class="button" onclick="openSection('custom')">Custom Job</button>
+  <!-- PORTAL -->
+  <main id="portal">
+    <button class="button" onclick="openOrgan('email')">Email Janitor</button>
+    <button class="button" onclick="openOrgan('pc')">PC Janitor</button>
+    <button class="button" onclick="openOrgan('file')">File Assistant</button>
+    <button class="button" onclick="openOrgan('program')">Program Builder</button>
+    <button class="button" onclick="openOrgan('document')">Document Builder</button>
+    <button class="button" onclick="openOrgan('resume')">Resume Builder</button>
+    <button class="button" onclick="openOrgan('website')">Website Builder</button>
+    <button class="button" onclick="openOrgan('data')">Data Entry</button>
+    <button class="button" onclick="openOrgan('photo')">Photo Restoration</button>
+    <button class="button" onclick="openOrgan('format')">Document Formatting</button>
+    <button class="button" onclick="openOrgan('custom')">Custom Job</button>
   </main>
 
-  <!-- EMAIL JANITOR -->
+  <!-- ORGAN TEMPLATE -->
   <div id="email" class="section">
     <h2>Email Janitor</h2>
-    <p>This is the Email Janitor page.</p>
-    <div class="back" onclick="goHome()">Back</div>
+    <div class="task" onclick="openTask('Clean unread emails')">Clean unread emails</div>
+    <div class="task" onclick="openTask('Sort inbox into folders')">Sort inbox into folders</div>
+    <div class="task" onclick="openTask('Delete junk mail')">Delete junk mail</div>
+    <div class="task" onclick="openTask('Archive old messages')">Archive old messages</div>
+    <div class="back" onclick="goPortal()">Back</div>
   </div>
 
-  <!-- PC JANITOR -->
-  <div id="pc" class="section">
-    <h2>PC Janitor</h2>
-    <p>This is the PC Janitor page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- FILE ASSISTANT -->
-  <div id="file" class="section">
-    <h2>File Assistant</h2>
-    <p>This is the File Assistant page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- PROGRAM BUILDER -->
-  <div id="program" class="section">
-    <h2>Program Builder</h2>
-    <p>This is the Program Builder page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- DOCUMENT BUILDER -->
-  <div id="document" class="section">
-    <h2>Document Builder</h2>
-    <p>This is the Document Builder page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- RESUME BUILDER -->
-  <div id="resume" class="section">
-    <h2>Resume Builder</h2>
-    <p>This is the Resume Builder page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- WEBSITE BUILDER -->
-  <div id="website" class="section">
-    <h2>Website Builder</h2>
-    <p>This is the Website Builder page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- DATA ENTRY -->
-  <div id="data" class="section">
-    <h2>Data Entry</h2>
-    <p>This is the Data Entry page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- PHOTO RESTORATION -->
-  <div id="photo" class="section">
-    <h2>Photo Restoration</h2>
-    <p>This is the Photo Restoration page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- DOCUMENT FORMATTING -->
-  <div id="format" class="section">
-    <h2>Document Formatting</h2>
-    <p>This is the Document Formatting page.</p>
-    <div class="back" onclick="goHome()">Back</div>
-  </div>
-
-  <!-- CUSTOM JOB -->
-  <div id="custom" class="section">
-    <h2>Custom Job</h2>
-    <p>This is the Custom Job page.</p>
-    <div class="back" onclick="goHome()">Back</div>
+  <!-- ACTION SCREEN -->
+  <div id="action" class="action">
+    <h2 id="actionTitle"></h2>
+    <p>This is where the user will perform the job.</p>
+    <p>Later you can add uploads, instructions, or backend calls.</p>
+    <div class="back" onclick="goPortal()">Back to Portal</div>
   </div>
 
   <script>
-    function openSection(id) {
-      document.getElementById('home').style.display = 'none';
+    function openOrgan(id) {
+      document.getElementById('portal').style.display = 'none';
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
       document.getElementById(id).style.display = 'block';
     }
-    function goHome() {
-      document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
-      document.getElementById('home').style.display = 'block';
+    function openTask(taskName) {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      document.getElementById('actionTitle').innerText = taskName;
+      document.getElementById('action').style.display = 'block';
+    }
+    function goPortal() {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+      document.getElementById('action').style.display = 'none';
+      document.getElementById('portal').style.display = 'block';
     }
   </script>
 </body>
